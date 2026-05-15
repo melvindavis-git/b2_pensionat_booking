@@ -19,10 +19,9 @@ public class Room {
     protected boolean occupied;
     protected Long customerId;
 
-    public Room (String nr, boolean occupied, Long customerId) {
+    public Room (String nr, boolean occupied) {
         this.nr = nr;
         this.occupied = occupied;
-        this.customerId = customerId;
     }
 
 }
