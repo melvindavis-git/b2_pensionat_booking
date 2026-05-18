@@ -35,7 +35,7 @@ public class BookingService {
 
         List<Booking> bookings = repo.findAll();
         //List<Booking> roomBookings = bookings.stream().filter(booking -> booking.getRoom().getNr().equals(nr)).toList();
-        List<Room> validRooms = null;
+        ArrayList<Room> validRooms = new ArrayList<>();
 
 
         for (Booking booking : bookings) {
