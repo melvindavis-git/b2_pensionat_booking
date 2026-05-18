@@ -3,6 +3,7 @@ package org.example.backend1.Service;
 import org.example.backend1.Model.Booking;
 import org.example.backend1.Model.Room;
 import org.example.backend1.Repository.BookingRepository;
+import org.example.backend1.Repository.RoomRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -14,9 +15,12 @@ import java.util.List;
 public class BookingService {
 
     private final BookingRepository repo;
+    private final RoomRepository roomRepo;
 
-    public BookingService(BookingRepository repo) {
+
+    public BookingService(BookingRepository repo, RoomRepository roomRepo) {
         this.repo = repo;
+        this.roomRepo = roomRepo;
     }
 
 
@@ -35,14 +39,16 @@ public class BookingService {
         LocalDate requestedEndDate = LocalDate.parse(endDate);
 
         List<Booking> bookings = repo.findAll();
-        List<Room> validRooms = new ArrayList<>();
+        List<Room> validRooms = roomRepo.findAll();
 
 
         for (Booking booking : bookings) {
             boolean noConflict = booking.getEndDate().isBefore(requestedStartDate)
                     || booking.getStartDate().isAfter(requestedEndDate);
             if (noConflict) {
-                validRooms.add(booking.getRoom());
+
+            } else {
+                validRooms.remove(booking.getRoom());
             }
         }
 
