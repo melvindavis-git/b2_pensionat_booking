@@ -28,24 +28,20 @@ public class BookingService {
 //        return bookings;
 //    }
 
+
     public List<Room> canBook(String startDate, String endDate) {
 
         LocalDate requestedStartDate = LocalDate.parse(startDate);
         LocalDate requestedEndDate = LocalDate.parse(endDate);
 
         List<Booking> bookings = repo.findAll();
-        //List<Booking> roomBookings = bookings.stream().filter(booking -> booking.getRoom().getNr().equals(nr)).toList();
-        ArrayList<Room> validRooms = new ArrayList<>();
+        List<Room> validRooms = new ArrayList<>();
 
 
         for (Booking booking : bookings) {
-            if (booking.getStartDate().isAfter(requestedStartDate) && booking.getEndDate().isAfter(requestedStartDate)
-                    || booking.getStartDate().isBefore(requestedStartDate) && booking.getEndDate().isBefore(requestedStartDate)) {
-            } else {
-
-            }
-            if (booking.getStartDate().isAfter(requestedEndDate) && booking.getEndDate().isAfter(requestedEndDate)
-                    || booking.getStartDate().isBefore(requestedEndDate) && booking.getEndDate().isBefore(requestedEndDate)) {
+            boolean noConflict = booking.getEndDate().isBefore(requestedStartDate)
+                    || booking.getStartDate().isAfter(requestedEndDate);
+            if (noConflict) {
                 validRooms.add(booking.getRoom());
             }
         }
