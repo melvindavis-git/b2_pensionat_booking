@@ -1,13 +1,20 @@
 package org.example.backend1;
 
+import org.example.backend1.Model.Booking;
 import org.example.backend1.Model.Customer;
 import org.example.backend1.Model.Room;
+import org.example.backend1.Repository.BookingRepository;
 import org.example.backend1.Repository.CustomerRepository;
 import org.example.backend1.Repository.RoomRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 @SpringBootApplication
 public class Backend1Application {
@@ -17,9 +24,12 @@ public class Backend1Application {
     }
 
     @Bean
-    public CommandLineRunner createRooms(RoomRepository roomRepo, CustomerRepository customerRepo) {
+    public CommandLineRunner createRooms(RoomRepository roomRepo, CustomerRepository customerRepo, BookingRepository bookingRepo) {
         return (args) -> {
-            roomRepo.save(new Room("1"));
+            LocalDate d1 = LocalDate.of(2026, 5, 18);
+            LocalDate d2 = LocalDate.of(2026, 5, 20);
+            Room r1 = roomRepo.save(new Room("1"));
+            roomRepo.save(r1);
             roomRepo.save(new Room("2"));
             roomRepo.save(new Room("3"));
             roomRepo.save(new Room("4"));
@@ -29,9 +39,13 @@ public class Backend1Application {
             roomRepo.save(new Room("8"));
             roomRepo.save(new Room("9"));
             roomRepo.save(new Room("10"));
-            customerRepo.save(new Customer("Melvin", "melvin@gmail.com", "070123456789"));
+
+
+            Customer c1 = customerRepo.save(new Customer("Melvin", "melvin@gmail.com", "070123456789"));
             customerRepo.save(new Customer("Tungvall", "tungvall@gmail.com", "070123456789"));
             customerRepo.save(new Customer("Tim", "tim@gmail.com", "070123456789"));
+
+            bookingRepo.save(new Booking(r1, c1, d1, d2));
         };
     }
 

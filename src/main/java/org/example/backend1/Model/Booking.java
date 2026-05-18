@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -26,5 +26,15 @@ public class Booking {
     @JoinColumn(name = "customer_id")
     protected Customer customer;
 
-    protected Date bookingDate;
+    protected LocalDate startDate;
+    protected LocalDate endDate;
+
+    public Booking(Room room, Customer customer, LocalDate startDate, LocalDate endDate){
+        this.room = room;
+        this.customer = customer;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+
 }

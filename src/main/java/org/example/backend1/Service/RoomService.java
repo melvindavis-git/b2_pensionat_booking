@@ -19,9 +19,8 @@ public class RoomService {
         return repo.findAll();
     }
 
-    public List<Room> bookRoom(String nr, Long cId){
-        Room currentRoom = repo.findRoomByNr(nr);
+
+    public List<Room> getTest() {
         return repo.findAll();
     }
-
 }

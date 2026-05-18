@@ -22,9 +22,4 @@ public class RoomController {
         return service.getAllRooms();
     }
 
-    @GetMapping("rooms/{nr}/{cId}")
-    public List<Room> bookRoom(@PathVariable String nr, @PathVariable Long cId) {
-        return service.bookRoom(nr, cId);
-    }
-
 }

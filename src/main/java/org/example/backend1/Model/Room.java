@@ -18,7 +18,6 @@ public class Room {
     protected String nr;
     protected int beds;
 
-
     public Room (String nr) {
         this.nr = nr;
     }
