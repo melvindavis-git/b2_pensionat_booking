@@ -19,16 +19,16 @@ public class Backend1Application {
     @Bean
     public CommandLineRunner createRooms(RoomRepository roomRepo, CustomerRepository customerRepo) {
         return (args) -> {
-            roomRepo.save(new Room("1", false));
-            roomRepo.save(new Room("2", false));
-            roomRepo.save(new Room("3", false));
-            roomRepo.save(new Room("4", false));
-            roomRepo.save(new Room("5", false));
-            roomRepo.save(new Room("6", false));
-            roomRepo.save(new Room("7", false));
-            roomRepo.save(new Room("8", false));
-            roomRepo.save(new Room("9", false));
-            roomRepo.save(new Room("10", false));
+            roomRepo.save(new Room("1"));
+            roomRepo.save(new Room("2"));
+            roomRepo.save(new Room("3"));
+            roomRepo.save(new Room("4"));
+            roomRepo.save(new Room("5"));
+            roomRepo.save(new Room("6"));
+            roomRepo.save(new Room("7"));
+            roomRepo.save(new Room("8"));
+            roomRepo.save(new Room("9"));
+            roomRepo.save(new Room("10"));
             customerRepo.save(new Customer("Melvin", "melvin@gmail.com", "070123456789"));
             customerRepo.save(new Customer("Tungvall", "tungvall@gmail.com", "070123456789"));
             customerRepo.save(new Customer("Tim", "tim@gmail.com", "070123456789"));

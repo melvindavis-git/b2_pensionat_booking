@@ -21,8 +21,6 @@ public class RoomService {
 
     public List<Room> bookRoom(String nr, Long cId){
         Room currentRoom = repo.findRoomByNr(nr);
-        currentRoom.setCustomerId(cId);
-        currentRoom.setOccupied(true);
         return repo.findAll();
     }
 

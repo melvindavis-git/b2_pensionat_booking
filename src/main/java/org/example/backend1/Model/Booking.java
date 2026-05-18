@@ -6,21 +6,25 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Room {
+public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
-    protected String nr;
-    protected int beds;
 
+    @ManyToOne
+    @JoinColumn(name = "room_id")
+    protected Room room;
 
-    public Room (String nr) {
-        this.nr = nr;
-    }
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    protected Customer customer;
 
+    protected Date bookingDate;
 }
