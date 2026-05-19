@@ -11,8 +11,4 @@ import java.util.List;
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     
-
-    List<Date> getBookingByStartDate(Date date);
-
-    List<Booking> findBookingByRoom_Nr(String roomNr);
 }

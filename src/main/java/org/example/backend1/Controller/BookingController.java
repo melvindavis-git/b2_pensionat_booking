@@ -24,9 +24,9 @@ public class BookingController {
 
 
 
-    @GetMapping("rooms/canbook/{date1}/{date2}")
-    public List<Room> canBook(@PathVariable String date1, @PathVariable String date2) {
-        return service.canBook(date1, date2);
+    @GetMapping("rooms/canbook/{date1}/{date2}/{doubleRoom}")
+    public List<Room> canBook(@PathVariable String date1, @PathVariable String date2, @PathVariable boolean doubleRoom) {
+        return service.canBook(date1, date2, doubleRoom);
     }
 
 //    @GetMapping("rooms/{roomNumber}/{customerId}")

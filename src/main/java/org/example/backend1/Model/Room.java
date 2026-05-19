@@ -16,10 +16,10 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
     protected String nr;
-    protected int beds;
+    protected boolean isDoubleRoom;
 
-    public Room (String nr) {
+    public Room (String nr, boolean isDoubleRoom) {
         this.nr = nr;
+        this.isDoubleRoom = isDoubleRoom;
     }
-
 }

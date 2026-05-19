@@ -26,25 +26,28 @@ public class Backend1Application {
     @Bean
     public CommandLineRunner createRooms(RoomRepository roomRepo, CustomerRepository customerRepo, BookingRepository bookingRepo) {
         return (args) -> {
+            //DATES
             LocalDate d1 = LocalDate.of(2026, 5, 18);
             LocalDate d2 = LocalDate.of(2026, 5, 20);
-            Room r1 = roomRepo.save(new Room("1"));
-            roomRepo.save(r1);
-            roomRepo.save(new Room("2"));
-            roomRepo.save(new Room("3"));
-            roomRepo.save(new Room("4"));
-            roomRepo.save(new Room("5"));
-            roomRepo.save(new Room("6"));
-            roomRepo.save(new Room("7"));
-            roomRepo.save(new Room("8"));
-            roomRepo.save(new Room("9"));
-            roomRepo.save(new Room("10"));
 
+            //ROOMS
+            Room r1 = roomRepo.save(new Room("1", true));
+            roomRepo.save(new Room("2", true));
+            roomRepo.save(new Room("3", true));
+            roomRepo.save(new Room("4", true));
+            roomRepo.save(new Room("5", true));
+            roomRepo.save(new Room("6", false));
+            roomRepo.save(new Room("7", false));
+            roomRepo.save(new Room("8", false));
+            roomRepo.save(new Room("9", false));
+            roomRepo.save(new Room("10", false));
 
+            //CUSTOMERS
             Customer c1 = customerRepo.save(new Customer("Melvin", "melvin@gmail.com", "070123456789"));
             customerRepo.save(new Customer("Tungvall", "tungvall@gmail.com", "070123456789"));
             customerRepo.save(new Customer("Tim", "tim@gmail.com", "070123456789"));
 
+            //BOOKINGS
             bookingRepo.save(new Booking(r1, c1, d1, d2));
         };
     }
