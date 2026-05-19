@@ -29,10 +29,12 @@ public class Backend1Application {
             //DATES
             LocalDate d1 = LocalDate.of(2026, 5, 18);
             LocalDate d2 = LocalDate.of(2026, 5, 20);
+            LocalDate d3 = LocalDate.of(2026, 6, 18);
+            LocalDate d4 = LocalDate.of(2026, 6, 20);
 
             //ROOMS
             Room r1 = roomRepo.save(new Room("1", true));
-            roomRepo.save(new Room("2", true));
+            Room r2 = roomRepo.save(new Room("2", true));
             roomRepo.save(new Room("3", true));
             roomRepo.save(new Room("4", true));
             roomRepo.save(new Room("5", true));
@@ -49,19 +51,21 @@ public class Backend1Application {
 
             //BOOKINGS
             bookingRepo.save(new Booking(r1, c1, d1, d2));
+            bookingRepo.save(new Booking(r1, c1, d3, d4));
         };
     }
 
-    //TODO: DTO-klasser (service lagret, från entity till DTO)
-    //TODO: låt controllers hantera thymeleaf-mallar
-    //TODO: ta bort kund (bara om bokningar ej finns)
-    //TODO: ett rum kan bokas av kund (+en eller fler nätter, datum)
-    //TODO: avboka ett rum och ändra bokning
-    //TODO: ett rum kan vara enkel- eller dubbelrum
-    //TODO: dubbelrum kan ha fler sängar (1-2)
-    //TODO: söka på datum/datumintervall och antal personer - få fram alla lediga rum
-    //TODO: ha vettiga felmeddelanden, använd validerings-annoteringar i modell-klasser
-    //TODO: enhetstester
+    //TODO: DTO-klasser (service lagret, från entity till DTO) ❌
+    //TODO: låt controllers hantera thymeleaf-mallar ❌
+    //TODO: ta bort kund (bara om bokningar ej finns) ❌
+    //TODO: ett rum kan bokas av kund (+en eller fler nätter, datum) ❌
+    //TODO: avboka ett rum och ändra bokning ✅
+    //TODO: ett rum kan vara enkel- eller dubbelrum ✅
+    //TODO: dubbelrum kan ha fler sängar (1-2) ❌
+    //TODO: söka på datum/datumintervall och antal personer - få fram alla lediga rum ❌
+    //TODO: ha vettiga felmeddelanden, använd validerings-annoteringar i modell-klasser ❌
+    //TODO: enhetstester ❌
+
 
 
 }
