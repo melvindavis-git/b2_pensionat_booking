@@ -65,6 +65,7 @@ public class Backend1Application {
     //TODO: söka på datum/datumintervall och antal personer - få fram alla lediga rum ✅
     //TODO: ha vettiga felmeddelanden, använd validerings-annoteringar i modell-klasser ❌
     //TODO: enhetstester ❌
+    //TODO: Hantera fel för inga tillgängliga rum
 
 
 

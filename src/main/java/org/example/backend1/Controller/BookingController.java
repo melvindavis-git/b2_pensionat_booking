@@ -40,10 +40,10 @@ public class BookingController {
         return bookings;
     }
 
-    @GetMapping("rooms/book/{startDate}/{endDate}/{isDoubleRoom}/{customer}")
+    @GetMapping("rooms/book/{startDate}/{endDate}/{isDoubleRoom}/{customerid}")
     public Booking bookRoom(@PathVariable String startDate, @PathVariable String endDate,
-                         @PathVariable boolean isDoubleRoom, @PathVariable Customer customer) {
-       return bookingService.createBooking(startDate, endDate, isDoubleRoom, customer.getId());
+                         @PathVariable boolean isDoubleRoom, @PathVariable Long customerid) {
+       return bookingService.createBooking(startDate, endDate, isDoubleRoom, customerid);
     }
 
     @PostMapping("rooms/book/")
