@@ -81,6 +81,7 @@ public class BookingService {
     }
 
     public BookingResponse createBooking2(BookingRequest request) {
+        System.out.println(request.isDoubleRoom());
         List<Room> availableRooms = canBook(request.getStartDate(), request.getEndDate(), request.isDoubleRoom());
         LocalDate requestedStartDate = LocalDate.parse(request.getStartDate());
         LocalDate requestedEndDate = LocalDate.parse(request.getEndDate());

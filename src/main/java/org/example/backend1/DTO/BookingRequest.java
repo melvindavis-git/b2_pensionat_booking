@@ -8,6 +8,6 @@ public class BookingRequest {
 
     private String startDate;
     private String endDate;
-    private boolean isDoubleRoom;
+    private boolean doubleRoom;
     private Long customer;
 }

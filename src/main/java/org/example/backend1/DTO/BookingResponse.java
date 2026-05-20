@@ -5,6 +5,6 @@ import org.example.backend1.Model.Room;
 
 import java.time.LocalDate;
 
-public record BookingResponse(LocalDate startDate, LocalDate endDate, Room roomNumber, Customer customer) {
+public record BookingResponse(LocalDate startDate, LocalDate endDate, Room room, Customer customer) {
 
 }
