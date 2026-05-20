@@ -1,5 +1,7 @@
 package org.example.backend1.Controller;
 
+import org.example.backend1.DTO.BookingRequest;
+import org.example.backend1.DTO.BookingResponse;
 import org.example.backend1.Model.Booking;
 import org.example.backend1.Model.Customer;
 import org.example.backend1.Model.Room;
@@ -17,22 +19,28 @@ import java.util.List;
 public class BookingController {
 
     private final BookingService bookingService;
-    private final RoomService roomService;
+    private static final Logger log = LoggerFactory.getLogger(BookingController.class);
 
-    public BookingController(BookingService bookingService, RoomService roomService) {
+
+    public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
-        this.roomService = roomService;
     }
 
 
     @GetMapping("rooms/canbook/{date1}/{date2}/{doubleRoom}")
     public List<Room> canBook(@PathVariable String date1, @PathVariable String date2, @PathVariable boolean doubleRoom) {
-        return bookingService.canBook(date1, date2, doubleRoom);
+        log.info("GET request for available rooms between {} and {}", date1, date2);
+        List<Room> rooms = bookingService.canBook(date1, date2, doubleRoom);
+        log.info("Returned {} rooms", rooms.size());
+        return rooms;
     }
 
     @DeleteMapping("/rooms/removebooking/{bookingID}")
     public List<Booking> removeBooking(@PathVariable Long bookingID){
-        return bookingService.removeBooking(bookingID);
+        log.info("DELETE request to delete booking");
+        List<Booking> bookings = bookingService.removeBooking(bookingID);
+        log.info("Successfully removed booking with id {}", bookingID);
+        return bookings;
     }
 
     @GetMapping("rooms/book/{startDate}/{endDate}/{isDoubleRoom}/{customer}")
@@ -41,6 +49,10 @@ public class BookingController {
        return bookingService.createBooking(startDate, endDate, isDoubleRoom, customer);
     }
 
+    @PostMapping("rooms/book/")
+    public BookingResponse bookRoom2(@RequestBody BookingRequest bookingRequest) {
+        return bookingService.createBooking2(bookingRequest);
+    }
 
     @GetMapping("rooms/edit/{bookingID}/{startDate}/{endDate}")
     public Booking editBooking(@PathVariable Long bookingID, @PathVariable String startDate, @PathVariable String endDate){

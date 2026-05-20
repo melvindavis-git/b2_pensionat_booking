@@ -19,8 +19,4 @@ public class RoomService {
         return repo.findAll();
     }
 
-
-    public List<Room> getTest() {
-        return repo.findAll();
-    }
 }

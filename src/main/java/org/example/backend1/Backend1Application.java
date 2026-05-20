@@ -57,12 +57,12 @@ public class Backend1Application {
 
     //TODO: DTO-klasser (service lagret, från entity till DTO) ❌
     //TODO: låt controllers hantera thymeleaf-mallar ❌
-    //TODO: ta bort kund (bara om bokningar ej finns) ❌
-    //TODO: ett rum kan bokas av kund (+en eller fler nätter, datum) ❌
+    //TODO: ta bort kund (bara om bokningar ej finns) ✅
+    //TODO: ett rum kan bokas av kund (+en eller fler nätter, datum) ❌ Måste göras i thymeleaf
     //TODO: avboka ett rum och ändra bokning ✅
     //TODO: ett rum kan vara enkel- eller dubbelrum ✅
-    //TODO: dubbelrum kan ha fler sängar (1-2) ❌
-    //TODO: söka på datum/datumintervall och antal personer - få fram alla lediga rum ❌
+    //TODO: dubbelrum kan ha fler sängar (1-2) ✅
+    //TODO: söka på datum/datumintervall och antal personer - få fram alla lediga rum ✅
     //TODO: ha vettiga felmeddelanden, använd validerings-annoteringar i modell-klasser ❌
     //TODO: enhetstester ❌
 

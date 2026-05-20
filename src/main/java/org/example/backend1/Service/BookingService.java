@@ -1,9 +1,12 @@
 package org.example.backend1.Service;
 
+import org.example.backend1.DTO.BookingRequest;
+import org.example.backend1.DTO.BookingResponse;
 import org.example.backend1.Model.Booking;
 import org.example.backend1.Model.Customer;
 import org.example.backend1.Model.Room;
 import org.example.backend1.Repository.BookingRepository;
+import org.example.backend1.Repository.CustomerRepository;
 import org.example.backend1.Repository.RoomRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +21,13 @@ public class BookingService {
 
     private final BookingRepository bookingRepo;
     private final RoomRepository roomRepo;
+    private final CustomerRepository customerRepository;
 
 
-    public BookingService(BookingRepository bookingRepo, RoomRepository roomRepo) {
+    public BookingService(BookingRepository bookingRepo, RoomRepository roomRepo, CustomerRepository customerRepository) {
         this.bookingRepo = bookingRepo;
         this.roomRepo = roomRepo;
+        this.customerRepository = customerRepository;
     }
 
 
@@ -63,14 +68,28 @@ public class BookingService {
         return validRooms;
     }
 
-    public Booking createBooking(String startDate, String endDate, boolean isDoubleRoom, Customer customer) {
+    public Booking createBooking(String startDate, String endDate, boolean isDoubleRoom, Long customerId) {
         List<Room> availableRooms = canBook(startDate, endDate, isDoubleRoom);
         LocalDate requestedStartDate = LocalDate.parse(startDate);
         LocalDate requestedEndDate = LocalDate.parse(endDate);
 
-        Booking currentBooking = new Booking(availableRooms.getFirst(), customer, requestedStartDate, requestedEndDate);
+        Customer currentCustomer = customerRepository.findById(customerId).orElse(null);
+
+        Booking currentBooking = new Booking(availableRooms.getFirst(), currentCustomer, requestedStartDate, requestedEndDate);
         bookingRepo.save(currentBooking);
         return currentBooking;
+    }
+
+    public BookingResponse createBooking2(BookingRequest request) {
+        List<Room> availableRooms = canBook(request.getStartDate(), request.getEndDate(), request.isDoubleRoom());
+        LocalDate requestedStartDate = LocalDate.parse(request.getStartDate());
+        LocalDate requestedEndDate = LocalDate.parse(request.getEndDate());
+
+        Customer currentCustomer = customerRepository.findById(request.getCustomer()).orElse(null);
+
+        Booking currentBooking = new Booking(availableRooms.getFirst(), currentCustomer, requestedStartDate, requestedEndDate);
+        bookingRepo.save(currentBooking);
+        return new BookingResponse(currentBooking.getStartDate(), currentBooking.getEndDate(), currentBooking.getRoom() ,currentBooking.getCustomer());
     }
 
     public Booking editBooking(Long bookingID, String startDate, String endDate){
@@ -115,5 +134,6 @@ public class BookingService {
     public List<Booking> getAllBookings(){
         return bookingRepo.findAll();
     }
+
 
 }
