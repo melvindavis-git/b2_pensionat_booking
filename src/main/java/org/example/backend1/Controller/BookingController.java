@@ -6,13 +6,10 @@ import org.example.backend1.Model.Booking;
 import org.example.backend1.Model.Customer;
 import org.example.backend1.Model.Room;
 import org.example.backend1.Service.BookingService;
-import org.example.backend1.Service.RoomService;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -46,7 +43,7 @@ public class BookingController {
     @GetMapping("rooms/book/{startDate}/{endDate}/{isDoubleRoom}/{customer}")
     public Booking bookRoom(@PathVariable String startDate, @PathVariable String endDate,
                          @PathVariable boolean isDoubleRoom, @PathVariable Customer customer) {
-       return bookingService.createBooking(startDate, endDate, isDoubleRoom, customer);
+       return bookingService.createBooking(startDate, endDate, isDoubleRoom, customer.getId());
     }
 
     @PostMapping("rooms/book/")
