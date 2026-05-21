@@ -2,8 +2,6 @@ package org.example.backend1.Controller;
 
 import org.example.backend1.DTO.BookingDTO;
 import org.example.backend1.DTO.RoomDTO;
-import org.example.backend1.Model.Booking;
-import org.example.backend1.Model.Room;
 import org.example.backend1.Service.BookingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +39,7 @@ public class BookingController {
 
     @GetMapping("rooms/book/{startDate}/{endDate}/{isDoubleRoom}/{customerid}")
     public BookingDTO bookRoom(@PathVariable String startDate, @PathVariable String endDate,
-                         @PathVariable boolean isDoubleRoom, @PathVariable Long customerid) {
+                               @PathVariable boolean isDoubleRoom, @PathVariable Long customerid) {
        return bookingService.createBooking(startDate, endDate, isDoubleRoom, customerid);
     }
 

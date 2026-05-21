@@ -1,12 +1,10 @@
 package org.example.backend1.Controller;
 
 import org.example.backend1.DTO.RoomDTO;
-import org.example.backend1.Model.Room;
 import org.example.backend1.Service.RoomService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;

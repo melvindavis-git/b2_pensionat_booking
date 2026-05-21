@@ -26,7 +26,10 @@ public class Booking {
     @JoinColumn(name = "customer_id")
     protected Customer customer;
 
+
     protected LocalDate startDate;
+
+
     protected LocalDate endDate;
 
     public Booking(Room room, Customer customer, LocalDate startDate, LocalDate endDate){

@@ -2,6 +2,7 @@ package org.example.backend1.Model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,10 @@ public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
+
+    @NotBlank
     protected String nr;
+
     protected boolean isDoubleRoom;
 
     public Room (String nr, boolean isDoubleRoom) {

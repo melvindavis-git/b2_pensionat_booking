@@ -1,7 +1,6 @@
 package org.example.backend1.Service;
 
 import org.example.backend1.DTO.BookingDTO;
-import org.example.backend1.DTO.CustomerDTO;
 import org.example.backend1.DTO.RoomDTO;
 import org.example.backend1.Model.Booking;
 import org.example.backend1.Model.Customer;
@@ -93,17 +92,22 @@ public class BookingService {
         LocalDate requestedStartDate = LocalDate.parse(startDate);
         LocalDate requestedEndDate = LocalDate.parse(endDate);
 
-        Room room = roomRepo.findById(availableRooms.getFirst().getId()).orElse(null);
+
+            Room room = roomRepo.findById(availableRooms.getFirst().getId()).orElse(null);
+
 
         Customer currentCustomer = customerRepository.findById(customerId).orElse(null);
 
-        Booking currentBooking = new Booking(room, currentCustomer, requestedStartDate, requestedEndDate);
-
-        bookingRepo.save(currentBooking);
 
 
-        return BookingToBookingDTO(currentBooking);
-    }
+            Booking currentBooking = new Booking(room, currentCustomer, requestedStartDate, requestedEndDate);
+
+            bookingRepo.save(currentBooking);
+
+
+            return BookingToBookingDTO(currentBooking);
+        }
+
 
 
     //Redigera bokning

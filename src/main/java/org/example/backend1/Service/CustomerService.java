@@ -1,10 +1,8 @@
 package org.example.backend1.Service;
 
 import org.example.backend1.DTO.CustomerDTO;
-import org.example.backend1.DTO.RoomDTO;
 import org.example.backend1.Model.Booking;
 import org.example.backend1.Model.Customer;
-import org.example.backend1.Model.Room;
 import org.example.backend1.Repository.BookingRepository;
 import org.example.backend1.Repository.CustomerRepository;
 import org.springframework.stereotype.Service;
