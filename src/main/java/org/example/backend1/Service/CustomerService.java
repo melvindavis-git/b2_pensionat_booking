@@ -1,14 +1,14 @@
 package org.example.backend1.Service;
 
-import org.example.backend1.DTO.RegisterRequest;
-import org.example.backend1.DTO.RegisterResponse;
+import org.example.backend1.DTO.CustomerDTO;
+import org.example.backend1.DTO.RoomDTO;
 import org.example.backend1.Model.Booking;
 import org.example.backend1.Model.Customer;
+import org.example.backend1.Model.Room;
 import org.example.backend1.Repository.BookingRepository;
 import org.example.backend1.Repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Book;
 import java.util.List;
 
 @Service
@@ -22,23 +22,26 @@ public class CustomerService {
         this.bookingRepo = bookingRepo;
     }
 
-    public List<Customer> getAllCustomers() {
-        return customerRepo.findAll();
+    public List<CustomerDTO> getAllCustomers() {
+        return customerRepo.findAll().stream().map(c -> CustomerToCustomerDTO(c)).toList();
+    }
+
+    public CustomerDTO CustomerToCustomerDTO(Customer c){
+        return CustomerDTO.builder().id(c.getId()).name(c.getName()).email(c.getEmail()).phone(c.getPhone()).build();
     }
 
 
 
-    public RegisterResponse registerCustomer(RegisterRequest request) {
-        List<Customer> customers = customerRepo.findAll();
+    public CustomerDTO registerCustomer(CustomerDTO customerDTO) {
 
-        Customer newCustomer = new Customer(request.getName(), request.getEmail(), request.getPhone());
+        Customer newCustomer = new Customer(customerDTO.getName(), customerDTO.getEmail(), customerDTO.getPhone());
 
         customerRepo.save(newCustomer);
 
-        return new RegisterResponse(newCustomer.getEmail()) ;
+        return CustomerToCustomerDTO(newCustomer);
     }
 
-    public List<Customer> deleteById(Long customerId) {
+    public List<CustomerDTO> deleteById(Long customerId) {
 
         boolean foundCustomer = false;
         for (Booking booking : bookingRepo.findAll()){
@@ -49,7 +52,7 @@ public class CustomerService {
         if (!foundCustomer) {
             customerRepo.deleteById(customerId);
         }
-        return customerRepo.findAll();
+        return getAllCustomers();
     }
 
 }

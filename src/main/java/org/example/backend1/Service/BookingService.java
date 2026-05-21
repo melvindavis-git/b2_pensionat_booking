@@ -1,7 +1,8 @@
 package org.example.backend1.Service;
 
-import org.example.backend1.DTO.BookingRequest;
-import org.example.backend1.DTO.BookingResponse;
+import org.example.backend1.DTO.BookingDTO;
+import org.example.backend1.DTO.CustomerDTO;
+import org.example.backend1.DTO.RoomDTO;
 import org.example.backend1.Model.Booking;
 import org.example.backend1.Model.Customer;
 import org.example.backend1.Model.Room;
@@ -11,8 +12,6 @@ import org.example.backend1.Repository.RoomRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,16 +29,28 @@ public class BookingService {
         this.customerRepository = customerRepository;
     }
 
+    public List<BookingDTO> getAllBookings() {
+        return bookingRepo.findAll().stream().map(b -> BookingToBookingDTO(b)).toList();
+    }
+
+    public BookingDTO BookingToBookingDTO(Booking b) {
+        return BookingDTO.builder().id(b.getId()).room
+                        (new Room(b.getRoom().getId(), b.getRoom().getNr(), b.getRoom().isDoubleRoom())).customer
+                        (new Customer(b.getCustomer().getId(), b.getCustomer().getName(), b.getCustomer().getEmail(),
+                                b.getCustomer().getPhone())).startDate(b.getStartDate().toString())
+                .endDate(b.getEndDate().toString()).build();
+    }
+
 
     //Metod som finner alla tillgängliga och giltiga rum beroende på datum och önskade antal sängar
-    public List<Room> canBook(String startDate, String endDate, boolean doubleRoom) {
+    public List<RoomDTO> canBook(String startDate, String endDate, boolean doubleRoom) {
 
         LocalDate requestedStartDate = LocalDate.parse(startDate);
         LocalDate requestedEndDate = LocalDate.parse(endDate);
 
         //Kollar att datum är valid, slutdatum får inte vara innan startdatum
         //Returnerar null om inkorrekt
-        if(requestedStartDate.isAfter(requestedEndDate)){
+        if (requestedStartDate.isAfter(requestedEndDate)) {
             return null;
         }
 
@@ -65,74 +76,87 @@ public class BookingService {
 
 
         //Det som består och returnerar är bara tillgängliga rum med önskade antal sängar
-        return validRooms;
+        return validRooms.stream()
+                .map(room -> RoomDTO.builder()
+                        .id(room.getId())
+                        .nr(room.getNr())
+                        .isDoubleRoom(room.isDoubleRoom())
+                        .build())
+                .toList();
     }
 
-    public Booking createBooking(String startDate, String endDate, boolean isDoubleRoom, Long customerId) {
-        List<Room> availableRooms = canBook(startDate, endDate, isDoubleRoom);
+
+    //Skapa bokning
+    public BookingDTO createBooking(String startDate, String endDate, boolean isDoubleRoom, Long customerId) {
+
+        List<RoomDTO> availableRooms = canBook(startDate, endDate, isDoubleRoom);
         LocalDate requestedStartDate = LocalDate.parse(startDate);
         LocalDate requestedEndDate = LocalDate.parse(endDate);
+
+        Room room = roomRepo.findById(availableRooms.getFirst().getId()).orElse(null);
 
         Customer currentCustomer = customerRepository.findById(customerId).orElse(null);
 
-        Booking currentBooking = new Booking(availableRooms.getFirst(), currentCustomer, requestedStartDate, requestedEndDate);
+        Booking currentBooking = new Booking(room, currentCustomer, requestedStartDate, requestedEndDate);
+
         bookingRepo.save(currentBooking);
-        return currentBooking;
+
+
+        return BookingToBookingDTO(currentBooking);
     }
 
-    public BookingResponse createBooking2(BookingRequest request) {
-        List<Room> availableRooms = canBook(request.getStartDate(), request.getEndDate(), request.isDoubleRoom());
-        LocalDate requestedStartDate = LocalDate.parse(request.getStartDate());
-        LocalDate requestedEndDate = LocalDate.parse(request.getEndDate());
 
-        Customer currentCustomer = customerRepository.findById(request.getCustomer()).orElse(null);
-
-        Booking currentBooking = new Booking(availableRooms.getFirst(), currentCustomer, requestedStartDate, requestedEndDate);
-        bookingRepo.save(currentBooking);
-        return new BookingResponse(currentBooking.getStartDate(), currentBooking.getEndDate(), currentBooking.getRoom() ,currentBooking.getCustomer());
-    }
-
-    public Booking editBooking(Long bookingID, String startDate, String endDate){
+    //Redigera bokning
+    public BookingDTO editBooking(Long bookingID, String startDate, String endDate) {
 
         LocalDate requestedStartDate = LocalDate.parse(startDate);
         LocalDate requestedEndDate = LocalDate.parse(endDate);
 
+        //Kommer hålla koll på om det rummet kan byta till angivet datum
         boolean available = true;
 
+        //Alla bokningar
         List<Booking> bookings = bookingRepo.findAll();
 
+        //Finner bokningen kunden inmatar via ID
+        //DETTA KAN GE NULL OM MAN MATAR IN FELAKTIGT ID
         Booking currentBooking = bookingRepo.findAll().stream().filter(booking -> Objects.equals(booking.getId(), bookingID)).findAny().orElse(null);
+
+        //Tar bort bokningen från listan alla bokningar
+        //Kollen som letar efter konflikter använder denna lista
+        //Om denna bokningen hade varit kvar hade den kunnat krockat i sig själv om datumen var i konflikt
         bookings.remove(currentBooking);
 
+        //Kollar om det finns någon konflikt bland bokningar på detta rum
         for (Booking booking : bookings) {
             boolean noConflict = booking.getEndDate().isBefore(requestedStartDate)
                     || booking.getStartDate().isAfter(requestedEndDate);
 
+
             if (noConflict) {
 
             } else {
-                if(currentBooking.getRoom().getId()==booking.getRoom().getId()){
-                available = false;
+                //Om konflikt sker ser boolean till att det inte går
+                if (currentBooking.getRoom().getId() == booking.getRoom().getId()) {
+                    available = false;
                 }
             }
         }
-        if (available){
+        //Om boolean ok ändra booking
+        if (available) {
             currentBooking.setStartDate(requestedStartDate);
             currentBooking.setEndDate(requestedEndDate);
         }
-
+        //Spara om bokning antingen med nya datum eller som den var
         bookingRepo.save(currentBooking);
-    return currentBooking;
+
+        return BookingToBookingDTO(currentBooking);
     }
 
 
-    public List<Booking> removeBooking(Long bookingID){
+    public List<BookingDTO> removeBooking(Long bookingID) {
         bookingRepo.deleteById(bookingID);
-        return bookingRepo.findAll();
-    }
-
-    public List<Booking> getAllBookings(){
-        return bookingRepo.findAll();
+        return getAllBookings();
     }
 
 

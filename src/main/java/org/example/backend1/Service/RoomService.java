@@ -1,5 +1,6 @@
 package org.example.backend1.Service;
 
+import org.example.backend1.DTO.RoomDTO;
 import org.example.backend1.Model.Room;
 import org.example.backend1.Repository.RoomRepository;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,12 @@ public class RoomService {
         this.repo = repo;
     }
 
-    public List<Room> getAllRooms(){
-        return repo.findAll();
+    public List<RoomDTO> getAllRooms(){
+        return repo.findAll().stream().map(r -> RoomToRoomDTO(r)).toList();
+    }
+
+    public RoomDTO RoomToRoomDTO(Room r) {
+        return RoomDTO.builder().id(r.getId()).nr(r.getNr()).isDoubleRoom(r.isDoubleRoom()).build();
     }
 
 }

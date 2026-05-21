@@ -1,5 +1,6 @@
 package org.example.backend1.Controller;
 
+import org.example.backend1.DTO.RoomDTO;
 import org.example.backend1.Model.Room;
 import org.example.backend1.Service.RoomService;
 import org.slf4j.Logger;
@@ -22,11 +23,11 @@ public class RoomController {
     }
 
     @GetMapping("rooms")
-    public List<Room> getAllRooms() {
+    public List<RoomDTO> getAllRooms() {
         log.info("GET request for all rooms");
-        List<Room> rooms = service.getAllRooms();
-        log.info("Returned {} rooms", rooms.size());
-        return rooms;
+        List<RoomDTO> roomsDTO = service.getAllRooms();
+        log.info("Returned {} rooms", roomsDTO.size());
+        return roomsDTO;
     }
 
 }

@@ -33,16 +33,16 @@ public class Backend1Application {
             LocalDate d4 = LocalDate.of(2026, 6, 20);
 
             //ROOMS
-            Room r1 = roomRepo.save(new Room("1", true));
-            Room r2 = roomRepo.save(new Room("2", true));
-            roomRepo.save(new Room("3", true));
-            roomRepo.save(new Room("4", true));
-            roomRepo.save(new Room("5", true));
-            roomRepo.save(new Room("6", false));
-            roomRepo.save(new Room("7", false));
-            roomRepo.save(new Room("8", false));
-            roomRepo.save(new Room("9", false));
-            roomRepo.save(new Room("10", false));
+            Room r1 = roomRepo.save(new Room("A1", true));
+            Room r2 = roomRepo.save(new Room("A2", true));
+            roomRepo.save(new Room("B3", true));
+            roomRepo.save(new Room("B4", true));
+            roomRepo.save(new Room("C5", true));
+            roomRepo.save(new Room("C6", false));
+            roomRepo.save(new Room("D7", false));
+            roomRepo.save(new Room("D8", false));
+            roomRepo.save(new Room("E9", false));
+            roomRepo.save(new Room("E10", false));
 
             //CUSTOMERS
             Customer c1 = customerRepo.save(new Customer("Melvin", "melvin@gmail.com", "070123456789"));
@@ -51,11 +51,11 @@ public class Backend1Application {
 
             //BOOKINGS
             bookingRepo.save(new Booking(r1, c1, d1, d2));
-            bookingRepo.save(new Booking(r1, c1, d3, d4));
+            bookingRepo.save(new Booking(r2, c1, d3, d4));
         };
     }
 
-    //TODO: DTO-klasser (service lagret, från entity till DTO) ❌
+    //TODO: DTO-klasser (service lagret, från entity till DTO) ✅
     //TODO: låt controllers hantera thymeleaf-mallar ❌
     //TODO: ta bort kund (bara om bokningar ej finns) ✅
     //TODO: ett rum kan bokas av kund (+en eller fler nätter, datum) ❌ Måste göras i thymeleaf
@@ -65,7 +65,7 @@ public class Backend1Application {
     //TODO: söka på datum/datumintervall och antal personer - få fram alla lediga rum ✅
     //TODO: ha vettiga felmeddelanden, använd validerings-annoteringar i modell-klasser ❌
     //TODO: enhetstester ❌
-    //TODO: Hantera fel för inga tillgängliga rum
+    //TODO: Hantera fel för inga tillgängliga rum ❌
 
 
 
