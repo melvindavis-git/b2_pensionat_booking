@@ -30,11 +30,11 @@ public class BookingController {
     }
 
     @DeleteMapping("/rooms/removebooking/{bookingID}")
-    public List<BookingDTO> removeBooking(@PathVariable Long bookingID){
+    public BookingDTO removeBooking(@PathVariable Long bookingID){
         log.info("DELETE request to delete booking");
-        List<BookingDTO> bookings = bookingService.removeBooking(bookingID);
+        BookingDTO removedBooking = bookingService.removeBooking(bookingID);
         log.info("Successfully removed booking with id {}", bookingID);
-        return bookings;
+        return removedBooking;
     }
 
     @GetMapping("rooms/book/{startDate}/{endDate}/{isDoubleRoom}/{customerid}")

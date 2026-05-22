@@ -35,11 +35,11 @@ public class CustomerController {
     }
 
     @DeleteMapping("customers/delete/{id}")
-    public List<CustomerDTO> deleteById(@PathVariable Long id) {
+    public CustomerDTO deleteById(@PathVariable Long id) {
         log.info("DELETE request to delete customer");
-        List<CustomerDTO> customersDTO = service.deleteById(id);
+        CustomerDTO customerDTO = service.deleteById(id);
         log.info("Customer with id {} deleted successfully", id);
-        return customersDTO;
+        return customerDTO;
     }
 
 }

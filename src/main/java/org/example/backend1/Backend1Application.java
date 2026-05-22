@@ -67,8 +67,8 @@ public class Backend1Application {
     //TODO: söka på datum/datumintervall och antal personer - få fram alla lediga rum ✅
     //TODO: använd validerings-annoteringar i modell-klasser ✅
     //TODO: låt controllers hantera thymeleaf-mallar ❌
-    //TODO: Hantera fel för inga tillgängliga rum ❌
-    //TODO: ha vettiga felmeddelanden ❌
+    //TODO: Hantera fel för inga tillgängliga rum ✅
+    //TODO: ha vettiga felmeddelanden ✅
     //TODO: enhetstester ❌
 
 

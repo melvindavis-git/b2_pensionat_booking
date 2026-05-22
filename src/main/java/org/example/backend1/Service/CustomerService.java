@@ -5,7 +5,9 @@ import org.example.backend1.Model.Booking;
 import org.example.backend1.Model.Customer;
 import org.example.backend1.Repository.BookingRepository;
 import org.example.backend1.Repository.CustomerRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -24,10 +26,9 @@ public class CustomerService {
         return customerRepo.findAll().stream().map(c -> CustomerToCustomerDTO(c)).toList();
     }
 
-    public CustomerDTO CustomerToCustomerDTO(Customer c){
+    public CustomerDTO CustomerToCustomerDTO(Customer c) {
         return CustomerDTO.builder().id(c.getId()).name(c.getName()).email(c.getEmail()).phone(c.getPhone()).build();
     }
-
 
 
     public CustomerDTO registerCustomer(CustomerDTO customerDTO) {
@@ -39,18 +40,19 @@ public class CustomerService {
         return CustomerToCustomerDTO(newCustomer);
     }
 
-    public List<CustomerDTO> deleteById(Long customerId) {
+    public CustomerDTO deleteById(Long customerId) {
 
-        boolean foundCustomer = false;
-        for (Booking booking : bookingRepo.findAll()){
-            if (booking.getCustomer().getId().equals(customerId)){
-                foundCustomer=true;
+        Customer deletedCustomer = customerRepo.findById(customerId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.BAD_REQUEST, "Kunden hittades ej."));
+        CustomerDTO deletedCustomerDTO = CustomerToCustomerDTO(deletedCustomer);
+
+        for (Booking booking : bookingRepo.findAll()) {
+            if (booking.getCustomer().getId().equals(customerId)) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Kunden har en bokning.");
             }
         }
-        if (!foundCustomer) {
-            customerRepo.deleteById(customerId);
-        }
-        return getAllCustomers();
+        customerRepo.deleteById(customerId);
+        return deletedCustomerDTO;
     }
 
 }
