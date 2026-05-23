@@ -1,14 +1,10 @@
 package org.example.backend1.Controller;
 
 
-import org.example.backend1.BaseControllerTest;
 import org.example.backend1.DTO.CustomerDTO;
 import org.example.backend1.Model.Customer;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.client.RestTestClient;
 
 import java.util.List;
 
@@ -16,11 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-@AutoConfigureRestTestClient
 class CustomerControllerTest extends BaseControllerTest {
 
-    @Autowired
-    private RestTestClient restTestClient;
 
     @Test
     void getAllCustomersTest() {
