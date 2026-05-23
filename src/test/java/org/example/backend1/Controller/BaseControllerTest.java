@@ -1,5 +1,6 @@
 package org.example.backend1.Controller;
 
+import org.example.backend1.Model.Booking;
 import org.example.backend1.Model.Customer;
 import org.example.backend1.Model.Room;
 import org.example.backend1.Repository.BookingRepository;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.client.RestTestClient;
+
+import java.time.LocalDate;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -40,16 +43,19 @@ public abstract class BaseControllerTest {
         customerRepository.save(customer2);
         customerRepository.save(customer3);
 
-        Room room1 = new Room("1A", false);
-        Room room2 = new Room("2A", false);
-        Room room3 = new Room("3A", false);
-        Room room4 = new Room("1B", true);
+        Room room1 = new Room("A1", false);
+        Room room2 = new Room("A2", false);
+        Room room3 = new Room("A3", false);
+        Room room4 = new Room("B1", true);
 
         roomRepository.save(room1);
         roomRepository.save(room2);
         roomRepository.save(room3);
         roomRepository.save(room4);
 
+        bookingRepository.save(new Booking(room1, customer1, LocalDate.of(2026, 05, 10), LocalDate.of(2026, 05, 20)));
+        bookingRepository.save(new Booking(room2, customer2, LocalDate.of(2026, 05, 15), LocalDate.of(2026, 05, 20)));
+        bookingRepository.save(new Booking(room4, customer3, LocalDate.of(2026, 05, 20), LocalDate.of(2026, 05, 22)));
     }
 
 //    @AfterEach

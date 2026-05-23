@@ -39,6 +39,8 @@ class CustomerControllerTest extends BaseControllerTest {
         assertTrue(all.getLast().getName().equals("Testsson"));
     }
 
+
+    //TODO: [TEST] Dunno if fixed and broken or never finished it.
     @Test
     void deleteByIdTest() {
         List<Customer> customers = customerRepository.findAll();
