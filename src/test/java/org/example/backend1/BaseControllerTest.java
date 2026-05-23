@@ -15,11 +15,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 public abstract class BaseControllerTest {
 
     @Autowired
-    CustomerRepository customerRepository;
+    protected CustomerRepository customerRepository;
     @Autowired
-    RoomRepository roomRepository;
+    protected RoomRepository roomRepository;
     @Autowired
-    BookingRepository bookingRepository;
+    protected BookingRepository bookingRepository;
 
     @BeforeEach
     void setUp() {

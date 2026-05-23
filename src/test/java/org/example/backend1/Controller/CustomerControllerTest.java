@@ -2,13 +2,18 @@ package org.example.backend1.Controller;
 
 
 import org.example.backend1.BaseControllerTest;
-import org.example.backend1.Repository.BookingRepository;
-import org.example.backend1.Repository.CustomerRepository;
+import org.example.backend1.DTO.CustomerDTO;
+import org.example.backend1.Model.Customer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.client.RestTestClient;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @AutoConfigureRestTestClient
@@ -27,12 +32,30 @@ class CustomerControllerTest extends BaseControllerTest {
                 .jsonPath("$[0].name").isEqualTo("Mikael")
                 .jsonPath("$[1].name").isEqualTo("Tim")
                 .jsonPath("$[2].name").isEqualTo("Melvin");
+
     }
 
     @Test
     void registerCustomersTest() {
+        restTestClient.post()
+                .uri("http://localhost:8080/customers/register")
+                .body(new CustomerDTO(null, "Testsson", "testsson@test.se", "0709112233"))
+                .exchange()
+                .expectStatus().isOk();
+        List<Customer> all = customerRepository.findAll();
+        assertTrue(all.getLast().getName().equals("Testsson"));
     }
+
     @Test
     void deleteByIdTest() {
+        List<Customer> customers = customerRepository.findAll();
+        Long idBeforeDelete = customers.get(0).getId();
+        restTestClient.delete()
+                .uri("http://localhost:8080/customers/delete/" + idBeforeDelete)
+                .exchange()
+                .expectStatus().isOk();
+
+        customers = customerRepository.findAll();
+        assertFalse(customers.contains(idBeforeDelete));
     }
 }
