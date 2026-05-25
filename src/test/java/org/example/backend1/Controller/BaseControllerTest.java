@@ -38,10 +38,12 @@ public abstract class BaseControllerTest {
         Customer customer1 = new Customer("Mikael", "mikael@mail.com", "070311223344");
         Customer customer2 = new Customer("Tim", "tim@mail.com", "070311223344");
         Customer customer3 = new Customer("Melvin", "melvin@mail.com", "070311223344");
+        Customer customer4 = new Customer("Rolf", "rolfh@mail.com", "070311223344");
 
         customerRepository.save(customer1);
         customerRepository.save(customer2);
         customerRepository.save(customer3);
+        customerRepository.save(customer4);
 
         Room room1 = new Room("A1", false);
         Room room2 = new Room("A2", false);
@@ -54,7 +56,7 @@ public abstract class BaseControllerTest {
         roomRepository.save(room4);
 
         bookingRepository.save(new Booking(room1, customer1, LocalDate.of(2026, 05, 10), LocalDate.of(2026, 05, 20)));
-        bookingRepository.save(new Booking(room2, customer2, LocalDate.of(2026, 05, 15), LocalDate.of(2026, 05, 20)));
+        bookingRepository.save(new Booking(room4, customer2, LocalDate.of(2026, 05, 15), LocalDate.of(2026, 05, 20)));
         bookingRepository.save(new Booking(room4, customer3, LocalDate.of(2026, 05, 20), LocalDate.of(2026, 05, 22)));
     }
 

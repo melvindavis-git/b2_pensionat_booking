@@ -1,6 +1,7 @@
 package org.example.backend1.Controller;
 
 
+import jakarta.transaction.Transactional;
 import org.example.backend1.DTO.CustomerDTO;
 import org.example.backend1.Model.Customer;
 import org.junit.jupiter.api.Test;
@@ -48,6 +49,7 @@ class CustomerControllerTest extends BaseControllerTest {
     //TODO: [TEST] Dunno if fixed and broken or never finished it.
     @Test
     //TODO [TEST] Test 400 if customer has booking and 200 if no booking
+    @Transactional
     void deleteByIdTest() {
         List<Customer> customers = customerRepository.findAll();
         Customer customer = customers.get(0);
@@ -62,6 +64,8 @@ class CustomerControllerTest extends BaseControllerTest {
         assertTrue(customers.contains(customer));
 
 
+        bookingRepository.deleteBookingByCustomer(customer);
+        System.out.println(" HEY HEY HEY HEY");
         restTestClient.delete()
                 .uri("http://localhost:8080/customers/delete/" + customer.getId())
                 .exchange()
