@@ -10,5 +10,41 @@
     <button><</button>
 </form>
 
+<form th:action="@{/bookings}" method="post">
+
+    <label for="customer">Välj kund:</label>
+
+    <select name="customerId" id="customer">
+        <option th:each="customer : ${customers}"
+                th:value="${customer.id}"
+                th:text="${customer.name}">
+        </option>
+    </select>
+
+    <label for="room">Välj typ av rum:</label>
+
+    <select name="isDoubleRoom" id="room">
+        <option value="false">Enkelrum</option>
+        <option value="true">Dubbelrum</option>
+    </select>
+
+    <br><br>
+
+    <label for="startDate">Startdatum:</label>
+    <input type="date" id="startDate" name="startDate">
+
+    <br><br>
+
+    <label for="endDate">Slutdatum:</label>
+    <input type="date" id="endDate" name="endDate">
+
+    <br><br>
+
+    <button type="submit">Skapa bokning</button>
+
+</form>
+
+<p th:if="${error}" th:text="${error}" style="color: red;"></p>
+
 </body>
 </html>

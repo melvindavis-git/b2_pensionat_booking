@@ -21,16 +21,18 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
-    @NotBlank(message = "Can not be blank.")
-    @Size(min = 2, max = 20, message = "Name too short or too long.")
+
+    @Size(min = 2, message = "Namn för kort.")
+    @Size(max = 20, message = "Namn för Långt.")
     protected String name;
 
-    @Email(message = "Invalid email format.")
-    @NotBlank(message = "Can not be blank.")
+    @Email(message = "Ogiltig email.")
+    @Size(min = 10, message = "Mailadress är för kort.")
+    @Size(max = 40, message = "Mailadress är för lång.")
     protected String email;
 
-    @NotBlank(message = "Can not be blank.")
-    @Size(min = 2, max = 20, message = "Phonenumber too short or too long.")
+    @Size(min = 2, max = 20, message = "Telefonnummer är för kort")
+    @Size(min = 2, max = 20, message = "Telefonnummeret är för långt.")
     protected String phone;
 
     public Customer(String name, String email, String phone) {

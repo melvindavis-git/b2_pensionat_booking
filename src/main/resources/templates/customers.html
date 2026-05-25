@@ -10,6 +10,10 @@
     <button>Hem</button>
 </form>
 
+<form th:action="@{/customers/register}" method="get">
+    <button>Lägg till ny kund</button>
+</form>
+
 <h1>Kunder</h1>
 
 <table>
@@ -27,6 +31,11 @@
         <td>
             <form th:action="@{/customers/delete/{id}(id=${customer.id})}" method="post">
                 <button type="submit">Delete</button>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{/customers/edit/{id}(id=${customer.id})}" method="get">
+                <button type="submit">Edit</button>
             </form>
         </td>
     </tr>
