@@ -1,6 +1,6 @@
 package org.example.backend1.Service;
 
-import org.example.backend1.Controller.BaseControllerTest;
+import org.example.backend1.BaseTest;
 import org.example.backend1.DTO.BookingDTO;
 import org.example.backend1.Model.Booking;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-class BookingServiceTest extends BaseControllerTest {
+class BookingServiceTest extends BaseTest {
 
     @Autowired
     private BookingService bookingService;

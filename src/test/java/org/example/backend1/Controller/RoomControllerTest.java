@@ -1,11 +1,10 @@
 package org.example.backend1.Controller;
 
+import org.example.backend1.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class RoomControllerTest extends BaseControllerTest {
+class RoomControllerTest extends BaseTest {
 
     @AutoConfigureRestTestClient
 

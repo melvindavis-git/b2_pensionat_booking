@@ -2,6 +2,7 @@ package org.example.backend1.Controller;
 
 
 import jakarta.transaction.Transactional;
+import org.example.backend1.BaseTest;
 import org.example.backend1.DTO.CustomerDTO;
 import org.example.backend1.Model.Customer;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class CustomerControllerTest extends BaseControllerTest {
+class CustomerControllerTest extends BaseTest {
 
 
     @Test
@@ -63,9 +64,8 @@ class CustomerControllerTest extends BaseControllerTest {
 
         assertTrue(customers.contains(customer));
 
-
         bookingRepository.deleteBookingByCustomer(customer);
-        System.out.println(" HEY HEY HEY HEY");
+
         restTestClient.delete()
                 .uri("http://localhost:8080/customers/delete/" + customer.getId())
                 .exchange()

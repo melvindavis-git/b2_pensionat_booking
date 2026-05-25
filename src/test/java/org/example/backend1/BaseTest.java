@@ -1,4 +1,4 @@
-package org.example.backend1.Controller;
+package org.example.backend1;
 
 import org.example.backend1.Model.Booking;
 import org.example.backend1.Model.Customer;
@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureRestTestClient
-public abstract class BaseControllerTest {
+public abstract class BaseTest {
 
     @Autowired
     protected CustomerRepository customerRepository;
