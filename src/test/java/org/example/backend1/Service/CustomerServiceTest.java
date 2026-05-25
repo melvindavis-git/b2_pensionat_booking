@@ -16,11 +16,11 @@ class CustomerServiceTest extends BaseTest {
     CustomerService customerService;
 
     @Test
-    void getAllCustomers() {
-        List<CustomerDTO> customerDTO = customerService.getAllCustomers();
-        assertNotNull(customerDTO);
-        assertTrue(customerDTO.size() == 4);
-        assertFalse(customerDTO.contains(customerDTO.get(0).getName().equals("Mikael")));
+    void getAllCustomersTest() {
+        List<CustomerDTO> customersDTO = customerService.getAllCustomers();
+        assertNotNull(customersDTO);
+        assertTrue(customersDTO.size() == 4);
+        assertFalse(customersDTO.contains(customersDTO.get(0).getName().equals("Mikael")));
     }
 
     @Test
@@ -42,11 +42,11 @@ class CustomerServiceTest extends BaseTest {
 
         assertFalse(customerRepository.findById(customers.getLast().getId()).isPresent());
 
-        customerService.deleteById(customers.getFirst().getId());
+        assertThrows(RuntimeException.class, () -> customerService.deleteById(customers.getLast().getId()));
     }
 
     @Test
-    void customerToCustomerDTO() {
+    void customerToCustomerDTOTest() {
         Customer customer = new Customer("Name", "email@emial.se", "0709112233");
         CustomerDTO customerDTO = customerService.CustomerToCustomerDTO(customer);
         assertNotNull(customerDTO);

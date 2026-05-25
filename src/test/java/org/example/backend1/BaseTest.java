@@ -57,7 +57,7 @@ public abstract class BaseTest {
 
         bookingRepository.save(new Booking(room1, customer1, LocalDate.of(2026, 05, 10), LocalDate.of(2026, 05, 20)));
         bookingRepository.save(new Booking(room4, customer2, LocalDate.of(2026, 05, 15), LocalDate.of(2026, 05, 20)));
-        bookingRepository.save(new Booking(room4, customer3, LocalDate.of(2026, 05, 20), LocalDate.of(2026, 05, 22)));
+        bookingRepository.save(new Booking(room4, customer3, LocalDate.of(2026, 05, 21), LocalDate.of(2026, 05, 22)));
     }
 
 //    @AfterEach
