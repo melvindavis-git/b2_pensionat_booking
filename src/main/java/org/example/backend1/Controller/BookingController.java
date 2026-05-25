@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("api/bookings")
 public class BookingController {
 
     private final BookingService bookingService;
@@ -20,37 +21,34 @@ public class BookingController {
         this.bookingService = bookingService;
     }
 
-
-    @GetMapping("rooms/canbook/{date1}/{date2}/{doubleRoom}")
-    public List<RoomDTO> canBook(@PathVariable String date1, @PathVariable String date2, @PathVariable boolean doubleRoom) {
-        log.info("GET request for available rooms between {} and {}", date1, date2);
-        List<RoomDTO> rooms = bookingService.canBook(date1, date2, doubleRoom);
-        log.info("Returned {} rooms", rooms.size());
-        return rooms;
+    @GetMapping()
+    public List<BookingDTO> getAllBookings() {
+        return bookingService.getAllBookings();
     }
 
-    @DeleteMapping("/rooms/removebooking/{bookingID}")
-    public BookingDTO removeBooking(@PathVariable Long bookingID){
+    @GetMapping("/available-rooms")
+    public List<RoomDTO> canBook(@RequestParam String startDate, @RequestParam String endDate,
+                                 @RequestParam boolean doubleRoom) {
+        return bookingService.canBook(startDate, endDate, doubleRoom);
+    }
+
+    @DeleteMapping("/{bookingID}")
+    public BookingDTO removeBooking(@PathVariable Long bookingID) {
         log.info("DELETE request to delete booking");
         BookingDTO removedBooking = bookingService.removeBooking(bookingID);
         log.info("Successfully removed booking with id {}", bookingID);
         return removedBooking;
     }
 
-    @GetMapping("rooms/book/{startDate}/{endDate}/{isDoubleRoom}/{customerid}")
-    public BookingDTO bookRoom(@PathVariable String startDate, @PathVariable String endDate,
-                               @PathVariable boolean isDoubleRoom, @PathVariable Long customerid) {
-       return bookingService.createBooking(startDate, endDate, isDoubleRoom, customerid);
+    @PostMapping()
+    public BookingDTO bookRoom(@RequestParam String startDate, @RequestParam String endDate,
+                               @RequestParam boolean isDoubleRoom, @RequestParam Long customerId) {
+        return bookingService.createBooking(startDate, endDate, isDoubleRoom, customerId);
     }
 
 
-    @GetMapping("rooms/edit/{bookingID}/{startDate}/{endDate}")
-    public BookingDTO editBooking(@PathVariable Long bookingID, @PathVariable String startDate, @PathVariable String endDate){
+    @PutMapping("/{id}")
+    public BookingDTO editBooking(@PathVariable Long bookingID, @PathVariable String startDate, @PathVariable String endDate) {
         return bookingService.editBooking(bookingID, startDate, endDate);
-    }
-
-    @GetMapping("rooms/getAllBookings")
-    public List<BookingDTO> getAllBookings(){
-    return bookingService.getAllBookings();
     }
 }

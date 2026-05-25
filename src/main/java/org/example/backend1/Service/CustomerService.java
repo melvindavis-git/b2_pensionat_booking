@@ -43,12 +43,12 @@ public class CustomerService {
     public CustomerDTO deleteById(Long customerId) {
 
         Customer deletedCustomer = customerRepo.findById(customerId).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.BAD_REQUEST, "Kunden hittades ej."));
+                new RuntimeException("Kunden hittades ej."));
         CustomerDTO deletedCustomerDTO = CustomerToCustomerDTO(deletedCustomer);
 
         for (Booking booking : bookingRepo.findAll()) {
             if (booking.getCustomer().getId().equals(customerId)) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Kunden har en bokning.");
+                throw new RuntimeException(customerRepo.findById(customerId).get().getName() + " har en bokning.");
             }
         }
         customerRepo.deleteById(customerId);

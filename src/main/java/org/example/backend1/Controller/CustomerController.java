@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("api/customers")
 public class CustomerController {
 
     private final CustomerService service;
@@ -19,7 +20,7 @@ public class CustomerController {
         this.service = service;
     }
 
-    @GetMapping("customers")
+    @GetMapping()
     public List<CustomerDTO> getAllCustomers() {
         log.info("GET request for all customers");
         List<CustomerDTO> customers = service.getAllCustomers();
@@ -27,14 +28,14 @@ public class CustomerController {
         return service.getAllCustomers();
     }
 
-    @PostMapping("customers/register")
+    @PostMapping("/register")
     public CustomerDTO registerCustomers(@Valid @RequestBody CustomerDTO customerDTO) {
         log.info("POST request to register customer");
         log.info("Customer {} registered successfully", customerDTO.getName());
         return service.registerCustomer(customerDTO);
     }
 
-    @DeleteMapping("customers/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public CustomerDTO deleteById(@PathVariable Long id) {
         log.info("DELETE request to delete customer");
         CustomerDTO customerDTO = service.deleteById(id);

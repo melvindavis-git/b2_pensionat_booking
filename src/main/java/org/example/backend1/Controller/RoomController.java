@@ -5,11 +5,13 @@ import org.example.backend1.Service.RoomService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("api/rooms")
 public class RoomController {
 
     private final RoomService service;
@@ -20,7 +22,7 @@ public class RoomController {
         this.service = service;
     }
 
-    @GetMapping("rooms")
+    @GetMapping
     public List<RoomDTO> getAllRooms() {
         log.info("GET request for all rooms");
         List<RoomDTO> roomsDTO = service.getAllRooms();

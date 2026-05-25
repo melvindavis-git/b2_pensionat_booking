@@ -58,10 +58,7 @@ public class BookingService {
 
         //Kollar att datum är valid, slutdatum får inte vara innan startdatum
         if (requestedEndDate.isBefore(requestedStartDate)) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Slutdatum kan inte vara innan startdatum."
-            );
+            throw new RuntimeException("Slutdatum kan inte vara innan startdatum.");
         }
 
         //Sparar alla bookings och alla rum i separata listor
@@ -100,9 +97,7 @@ public class BookingService {
     public BookingDTO createBooking(String startDate, String endDate, boolean isDoubleRoom, Long customerId) {
 
         if(!canParseDate(startDate)&&!canParseDate(endDate)){
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Felaktig datum syntax");
+            throw new RuntimeException("Felaktig datum syntax");
         }
 
 
@@ -112,23 +107,17 @@ public class BookingService {
 
 
         if (availableRooms == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Felaktig datum input."
-            );
+            throw new RuntimeException("Felaktig datum input.");
         }
 
         if (availableRooms.isEmpty()) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Inga rum tillgängliga."
-            );
+            throw new RuntimeException("Inga rum tillgängliga.");
         }
 
 
         Room room = roomRepo.findById(availableRooms.getFirst().getId()).orElse(null);
         Customer currentCustomer = customerRepository.findById(customerId).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.BAD_REQUEST, "Kunden hittades inte."));
+                new RuntimeException("Kunden hittades inte."));
 
 
         Booking currentBooking = new Booking(room, currentCustomer, requestedStartDate, requestedEndDate);
@@ -142,19 +131,14 @@ public class BookingService {
     public BookingDTO editBooking(Long bookingID, String startDate, String endDate) {
 
         if(!canParseDate(startDate)&&!canParseDate(endDate)){
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Felaktig datum syntax");
+            throw new RuntimeException("Felaktig datum syntax");
         }
 
         LocalDate requestedStartDate = LocalDate.parse(startDate);
         LocalDate requestedEndDate = LocalDate.parse(endDate);
 
         if (requestedEndDate.isBefore(requestedStartDate)) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Slutdatum kan inte vara innan startdatum"
-            );
+            throw new RuntimeException("Slutdatum kan inte vara innan startdatum");
         }
 
         //Kommer hålla koll på om det rummet kan byta till angivet datum
@@ -201,7 +185,7 @@ public class BookingService {
 
     public BookingDTO removeBooking(Long bookingID) {
         Booking deletedBooking = bookingRepo.findById(bookingID).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bokningen hittades ej."));
+                new RuntimeException("Bokningen hittades ej."));
         BookingDTO deletedBookingDTO = BookingToBookingDTO(deletedBooking);
         bookingRepo.deleteById(bookingID);
         return deletedBookingDTO;
