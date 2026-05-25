@@ -1,14 +1,14 @@
 package org.example.backend1.Controller;
 
 
+import org.example.backend1.DTO.BookingDTO;
+import org.example.backend1.DTO.CustomerDTO;
 import org.example.backend1.Service.BookingService;
 import org.example.backend1.Service.CustomerService;
 import org.example.backend1.Service.RoomService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class HTMLController {
@@ -22,18 +22,6 @@ public class HTMLController {
         this.roomService = roomService;
         this.bookingService = bookingService;
     }
-
-//    @RequestMapping("/formGreeting")
-//    public String formGreeting(){
-//        return "formGreetingStart.html";
-//    }
-//
-//    @RequestMapping("/testing")
-//    public String testing(@RequestParam String name, Model model){
-//        model.addAttribute("name", name);
-//        return "index";
-//    }
-
 
     @GetMapping("/")
     public String homePage(){
@@ -55,6 +43,40 @@ public class HTMLController {
     @GetMapping("/bookings")
     public String bookingsPage(Model model){
         model.addAttribute("bookings", bookingService.getAllBookings());
+        return "bookings";
+    }
+
+    @PostMapping("/customers/delete/{id}")
+    public String deleteCustomerById(@PathVariable Long id, Model model) {
+        try {
+            customerService.deleteById(id);
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+        }
+        model.addAttribute("customers", customerService.getAllCustomers());
+        return "customers";
+    }
+
+    @PostMapping("/bookings/delete/{id}")
+    public String removeBooking(@PathVariable Long id, Model model) {
+        try {
+            bookingService.removeBooking(id);
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+        }
+        model.addAttribute("bookings", bookingService.getAllBookings());
+        return "bookings";
+    }
+
+    @GetMapping("/bookings/new")
+    public String newBookingPage(){
+        return "createBooking";
+    }
+
+    @PostMapping("/bookings")
+    public String bookRoom(@RequestParam String startDate, @RequestParam String endDate,
+                               @RequestParam boolean isDoubleRoom, @RequestParam Long customerId) {
+        bookingService.createBooking(startDate, endDate, isDoubleRoom, customerId);
         return "bookings";
     }
 

@@ -6,6 +6,10 @@
 </head>
 <body>
 
+<form th:action="@{/}" method="get">
+    <button>Hem</button>
+</form>
+
 <h1>Rum</h1>
 
 <table>
@@ -17,7 +21,7 @@
     <tr th:each="room : ${rooms}">
         <td th:text="${room.id}"></td>
         <td th:text="${room.nr}"></td>
-        <td th:text="${room.doubleRoom}"></td>
+        <td th:text="${room.doubleRoom} ? 'Ja' : 'Nej'"></td>
     </tr>
 </table>
 
