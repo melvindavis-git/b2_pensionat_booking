@@ -49,7 +49,6 @@ class CustomerServiceTest extends BaseTest {
         customerService.deleteById(customers.getLast().getId());
 
         assertFalse(customerRepository.findById(customers.getLast().getId()).isPresent());
-
         assertThrows(RuntimeException.class, () -> customerService.deleteById(customers.getLast().getId()));
     }
 
