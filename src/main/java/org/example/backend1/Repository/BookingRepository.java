@@ -1,5 +1,6 @@
 package org.example.backend1.Repository;
 
+import org.example.backend1.DTO.BookingDTO;
 import org.example.backend1.Model.Booking;
 import org.example.backend1.Model.Customer;
 import org.example.backend1.Model.Room;
@@ -17,4 +18,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     void deleteBookingByCustomer_Id(Long id);
 
     void deleteBookingByCustomer(Customer customer);
+
+    Booking getBookingById(Long id);
 }
