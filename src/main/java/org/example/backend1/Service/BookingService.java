@@ -103,7 +103,7 @@ public class BookingService {
     public BookingDTO createBooking(String startDate, String endDate, boolean isDoubleRoom, Long customerId, int extraBeds) {
 
         if (!canParseDate(startDate) && !canParseDate(endDate)) {
-            throw new RuntimeException("Felaktig datum syntax");
+            throw new RuntimeException("Måste ange både slut och startdatum.");
         }
 
 
