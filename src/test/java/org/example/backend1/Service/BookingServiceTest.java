@@ -8,6 +8,7 @@ import org.example.backend1.Model.Customer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,11 @@ class BookingServiceTest extends BaseTest {
     void getAllBookingsTest() {
         List<BookingDTO> bookings = bookingService.getAllBookings();
         assertTrue(bookings.size() == 3);
+    }
+
+    @Test
+    void BookingToBookingDTOTest() {
+
     }
 
     @Test
@@ -43,30 +49,30 @@ class BookingServiceTest extends BaseTest {
 
     @Test
     void createBookingTest() {
-//      public BookingDTO createBooking(String startDate, String endDate, boolean isDoubleRoom, Long customerId) {
+//        public BookingDTO createBooking(String startDate, String endDate, boolean isDoubleRoom, Long customerId) {
         Customer customer = customerRepository.findAll().getFirst();
-        long customerID = customer.getId();
+        BookingDTO bookingDTO = bookingService.createBooking("2025-06-01", "2025-06-02", false, customer.getId());
+        Optional<Booking> bookings = bookingRepository.findById(bookingDTO.getId());
+        assertNotNull(bookingDTO);
 
-        BookingDTO availableBookingDTO = bookingService.createBooking("2025-06-01", "2025-06-02", false, customer.getId());
-
-        Optional<Booking> bookings = bookingRepository.findById(availableBookingDTO.getId());
-
-        assertNotNull(availableBookingDTO);
-        assertTrue(availableBookingDTO.getCustomer().equals(customer));
-        assertTrue(availableBookingDTO.getStartDate().equals("2025-06-01"));
-        assertTrue(availableBookingDTO.getEndDate().equals("2025-06-02"));
-        assertTrue(bookings.get().getId().equals(availableBookingDTO.getId()));
+        assertTrue(bookingDTO.getCustomer().equals(customer));
+        assertTrue(bookingDTO.getStartDate().equals("2025-06-01"));
+        assertTrue(bookingDTO.getEndDate().equals("2025-06-02"));
+        assertTrue(bookings.get().getId().equals(bookingDTO.getId()));
     }
 
     @Test
-    void editBooking() {
-        BookingDTO booking = bookingService.getAllBookings().getFirst();
-        BookingDTO editedBooking = bookingService.editBooking(booking.getId(), "2026-06-01", "2026-06-03");
-        assertTrue(editedBooking.getId().equals(booking.getId()) && editedBooking.getStartDate().equals("2026-06-01"));
+    void editBookingTest() {
+        Booking booking = bookingRepository.findAll().getFirst();
+        BookingDTO bookingDto = bookingService.editBooking(booking.getId(), "2026-06-01", "2026-06-02");
+        Booking bookingFromDb = bookingRepository.findById(booking.getId()).orElse(null);
+
+        assertEquals(bookingDto.getStartDate(), "2026-06-01");
+        assertEquals(bookingFromDb.getEndDate(), LocalDate.of(2026, 06, 02));
     }
 
     @Test
-    void removeBooking() {
+    void removeBookingTest() {
         Booking booking = bookingRepository.findAll().get(0);
         bookingService.removeBooking(booking.getId());
         List<Booking> bookings = bookingRepository.findAll();

@@ -24,6 +24,14 @@ class CustomerServiceTest extends BaseTest {
     }
 
     @Test
+    void customerToCustomerDTOTest() {
+        Customer customer = new Customer("Name", "email@emial.se", "0709112233");
+        CustomerDTO customerDTO = customerService.CustomerToCustomerDTO(customer);
+        assertNotNull(customerDTO);
+        assertTrue(customerDTO.getName().equals("Name"));
+    }
+
+    @Test
     void registerCustomerTest() {
         CustomerDTO customerDTO = new CustomerDTO(null, "Testsson", "testsson@test.se", "0709112233");
         CustomerDTO customer = customerService.registerCustomer(customerDTO);
@@ -45,13 +53,18 @@ class CustomerServiceTest extends BaseTest {
     }
 
     @Test
-    void customerToCustomerDTOTest() {
-        Customer customer = new Customer("Name", "email@email.se", "0709112233");
-        CustomerDTO customerDTO = customerService.CustomerToCustomerDTO(customer);
+    void getCustomerByIdTest() {
+    }
 
-        assertNotNull(customerDTO);
-        assertTrue(customerDTO.getName().equals("Name"));
-        assertTrue(customerDTO.getEmail().equals("email@email.se"));
-        assertTrue(customerDTO.getPhone().equals("0709112233"));
+    @Test
+    void editById() {
+        Customer customer = customerRepository.findAll().getFirst();
+        CustomerDTO customerDto = customerService.editById(customer.getId(), "NewName", "new@email.com", "0701998877");
+        assertEquals(customerDto.getName(), "NewName");
+        assertEquals(customerDto.getEmail(), "new@email.com");
+        assertEquals(customerDto.getPhone(), "0701998877");
+       assertThrows(RuntimeException.class, () -> customerService.editById(customer.getId(), "name", "new@mail", "0701998877"));
+
+
     }
 }

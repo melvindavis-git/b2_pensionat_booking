@@ -3,21 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-
-
-
 </head>
 <body>
 
-<form action="index.html" method="post">
-    <label for="fname">First name:</label><br>
-    <input type="text" id="fname" name="fname" value=""><br>
+<form th:action="@{/customers}" method="get">
+    <button><</button>
+</form>
 
-    <label for="lname">Last name:</label><br>
-    <input type="text" id="lname" name="lname" value=""><br><br>
+<p th:if="${error!=null}" th:text="${error}" style="color:red;"></p>
+<form th:action="@{/customers/register}" method="post">
+    <label for="name">Name:</label><br>
+    <input type="text" id="name" name="name" value=""><br>
+
+    <label for="email">Email:</label><br>
+    <input type="text" id="email" name="email" value=""><br>
+
+    <label for="phone">Phonenumber:</label><br>
+    <input type="text" id="phone" name="phone" value=""><br><br>
 
     <input type="submit" value="Submit">
 </form>
-
 </body>
 </html>
