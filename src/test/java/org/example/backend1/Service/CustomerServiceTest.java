@@ -41,15 +41,17 @@ class CustomerServiceTest extends BaseTest {
         customerService.deleteById(customers.getLast().getId());
 
         assertFalse(customerRepository.findById(customers.getLast().getId()).isPresent());
-
         assertThrows(RuntimeException.class, () -> customerService.deleteById(customers.getLast().getId()));
     }
 
     @Test
     void customerToCustomerDTOTest() {
-        Customer customer = new Customer("Name", "email@emial.se", "0709112233");
+        Customer customer = new Customer("Name", "email@email.se", "0709112233");
         CustomerDTO customerDTO = customerService.CustomerToCustomerDTO(customer);
+
         assertNotNull(customerDTO);
         assertTrue(customerDTO.getName().equals("Name"));
+        assertTrue(customerDTO.getEmail().equals("email@email.se"));
+        assertTrue(customerDTO.getPhone().equals("0709112233"));
     }
 }

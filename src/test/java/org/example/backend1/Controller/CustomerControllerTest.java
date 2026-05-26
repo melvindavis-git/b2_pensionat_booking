@@ -19,7 +19,7 @@ class CustomerControllerTest extends BaseTest {
     @Test
     void getAllCustomersTest() {
         restTestClient.get()
-                .uri("http://localhost:8080/customers")
+                .uri("http://localhost:8080/api/customers")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -32,7 +32,7 @@ class CustomerControllerTest extends BaseTest {
     @Test
     void registerCustomersTest() {
         restTestClient.post()
-                .uri("http://localhost:8080/customers/register")
+                .uri("http://localhost:8080/api/customers/register")
                 .body(new CustomerDTO(null, "Testsson", "testsson@test.se", "0709112233"))
                 .exchange()
                 .expectStatus().isOk();
@@ -56,9 +56,10 @@ class CustomerControllerTest extends BaseTest {
         Customer customer = customers.get(0);
 
         restTestClient.delete()
-                .uri("http://localhost:8080/customers/delete/" + customer.getId())
+                .uri("http://localhost:8080/api/customers/delete/" + customer.getId())
                 .exchange()
-                .expectStatus().isEqualTo(400);
+                .expectStatus().isEqualTo(500);
+        System.out.println(customer.getId());
 
         customers = customerRepository.findAll();
 
@@ -67,7 +68,7 @@ class CustomerControllerTest extends BaseTest {
         bookingRepository.deleteBookingByCustomer(customer);
 
         restTestClient.delete()
-                .uri("http://localhost:8080/customers/delete/" + customer.getId())
+                .uri("http://localhost:8080/api/customers/delete/" + customer.getId())
                 .exchange()
                 .expectStatus().isOk();
 

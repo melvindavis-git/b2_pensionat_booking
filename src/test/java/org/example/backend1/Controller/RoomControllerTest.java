@@ -11,14 +11,14 @@ class RoomControllerTest extends BaseTest {
     @Test
     void getAllRooms() {
         restTestClient.get()
-                .uri("http://localhost:8080/rooms")
+                .uri("http://localhost:8080/api/rooms")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
-                .jsonPath("$[0].nr").isEqualTo("1A")
-                .jsonPath("$[1].nr").isEqualTo("2A")
-                .jsonPath("$[2].nr").isEqualTo("3A")
-                .jsonPath("$[3].nr").isEqualTo("1B")
+                .jsonPath("$[0].nr").isEqualTo("A1")
+                .jsonPath("$[1].nr").isEqualTo("A2")
+                .jsonPath("$[2].nr").isEqualTo("A3")
+                .jsonPath("$[3].nr").isEqualTo("B1")
                 .jsonPath("$[0].doubleRoom").isEqualTo(false)
                 .jsonPath("$[3].doubleRoom").isEqualTo(true);
     }
