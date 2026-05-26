@@ -3,6 +3,7 @@ package org.example.backend1.Model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 public class Booking {
 
     @Id
@@ -32,11 +34,14 @@ public class Booking {
 
     protected LocalDate endDate;
 
+    protected int extraBeds;
+
     public Booking(Room room, Customer customer, LocalDate startDate, LocalDate endDate){
         this.room = room;
         this.customer = customer;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.extraBeds = 0;
     }
 
 

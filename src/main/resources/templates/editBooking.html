@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ny bokning</title>
+</head>
+<body>
+
+<form th:action="@{/bookings}" method="get">
+    <button><</button>
+</form>
+
+<form th:action="@{/bookings/edit/{id}(id=${booking.id})}" method="post">
+
+    <p th:text="'Boknings-ID: ' + ${booking.getId()}"></p>
+
+    <p th:text="'Rum: ' + ${booking.getRoom().getNr()}"></p>
+
+    <p th:text="'Extrasängar: ' + ${booking.getExtraBeds()}"></p>
+
+    <p th:text="'Kund: ' + ${booking.getCustomer().getName()}"></p>
+
+    <p th:text="'Typ av rum: ' + (${booking.getRoom().isDoubleRoom()} ? 'Dubbelrum' : 'Enkelrum')"></p>
+
+
+    <br>
+
+    <label for="startDate">Startdatum:</label>
+    <input type="date" id="startDate" name="startDate" th:value="${booking.getStartDate()}">
+
+    <br><br>
+
+    <label for="endDate">Slutdatum:</label>
+    <input type="date" id="endDate" name="endDate" th:value="${booking.getEndDate()}">
+
+    <br><br>
+
+    <button type="submit">Spara</button>
+
+</form>
+
+<p th:if="${error}" th:text="${error}" style="color: red;"></p>
+
+</body>
+</html>

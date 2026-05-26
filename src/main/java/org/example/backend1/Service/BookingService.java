@@ -1,6 +1,7 @@
 package org.example.backend1.Service;
 
 import org.example.backend1.DTO.BookingDTO;
+import org.example.backend1.DTO.CustomerDTO;
 import org.example.backend1.DTO.RoomDTO;
 import org.example.backend1.Model.Booking;
 import org.example.backend1.Model.Customer;
@@ -40,17 +41,22 @@ public class BookingService {
                         (new Room(b.getRoom().getId(), b.getRoom().getNr(), b.getRoom().isDoubleRoom())).customer
                         (new Customer(b.getCustomer().getId(), b.getCustomer().getName(), b.getCustomer().getEmail(),
                                 b.getCustomer().getPhone())).startDate(b.getStartDate().toString())
-                .endDate(b.getEndDate().toString()).build();
+
+                .endDate(b.getEndDate().toString()).extraBeds(b.getExtraBeds()).build();
     }
 
 
     //Metod som finner alla tillgängliga och giltiga rum beroende på datum och önskade antal sängar
     public List<RoomDTO> canBook(String startDate, String endDate, boolean doubleRoom) {
 
-        if(!canParseDate(startDate)&&!canParseDate(endDate)){
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Felaktig datum syntax");
+        if (!canParseDate(startDate)) {
+            throw new RuntimeException(
+                    "Måste ange startdatum.");
+        }
+
+        if (!canParseDate(endDate)) {
+            throw new RuntimeException(
+                    "Måste ange slutdatum.");
         }
 
         LocalDate requestedStartDate = LocalDate.parse(startDate);
@@ -94,9 +100,9 @@ public class BookingService {
 
 
     //Skapa bokning
-    public BookingDTO createBooking(String startDate, String endDate, boolean isDoubleRoom, Long customerId) {
+    public BookingDTO createBooking(String startDate, String endDate, boolean isDoubleRoom, Long customerId, int extraBeds) {
 
-        if(!canParseDate(startDate)&&!canParseDate(endDate)){
+        if (!canParseDate(startDate) && !canParseDate(endDate)) {
             throw new RuntimeException("Felaktig datum syntax");
         }
 
@@ -121,7 +127,7 @@ public class BookingService {
 
 
         Booking currentBooking = new Booking(room, currentCustomer, requestedStartDate, requestedEndDate);
-
+        currentBooking.setExtraBeds(extraBeds);
         bookingRepo.save(currentBooking);
         return BookingToBookingDTO(currentBooking);
     }
@@ -130,15 +136,15 @@ public class BookingService {
     //Redigera bokning
     public BookingDTO editBooking(Long bookingID, String startDate, String endDate) {
 
-        if(!canParseDate(startDate)&&!canParseDate(endDate)){
-            throw new RuntimeException("Felaktig datum syntax");
+        if (!canParseDate(startDate) && !canParseDate(endDate)) {
+            throw new RuntimeException("Felaktig datum syntax.");
         }
 
         LocalDate requestedStartDate = LocalDate.parse(startDate);
         LocalDate requestedEndDate = LocalDate.parse(endDate);
 
         if (requestedEndDate.isBefore(requestedStartDate)) {
-            throw new RuntimeException("Slutdatum kan inte vara innan startdatum");
+            throw new RuntimeException("Slutdatum kan inte vara innan startdatum.");
         }
 
         //Kommer hålla koll på om det rummet kan byta till angivet datum
@@ -198,6 +204,46 @@ public class BookingService {
         } catch (DateTimeParseException e) {
             return false;
         }
+    }
+
+    public BookingDTO editById(Long customerId, String startDate, String endDate) {
+        Booking editedBooking = bookingRepo.findById(customerId).orElseThrow(() -> new RuntimeException("Bokningen hittades ej"));
+
+        LocalDate requestedStartDate = LocalDate.parse(startDate);
+        LocalDate requestedEndDate = LocalDate.parse(endDate);
+
+        if (requestedEndDate.isBefore(requestedStartDate)) {
+            throw new RuntimeException("Slutdatum kan inte vara innan startdatum.");
+        }
+
+        editedBooking.setStartDate(requestedStartDate);
+        editedBooking.setEndDate(requestedEndDate);
+
+        bookingRepo.save(editedBooking);
+        return BookingToBookingDTO(editedBooking);
+    }
+
+    public BookingDTO getBookingById(Long id) {
+        return BookingToBookingDTO(Objects.requireNonNull(bookingRepo.findById(id).orElse(null)));
+    }
+
+    public boolean canAddBeds(Long id, int extraBeds) {
+
+        if (extraBeds < 1) {
+            throw new RuntimeException("För få sängar.");
+        } else {
+            if (extraBeds > 3) {
+                throw new RuntimeException("För många sängar.");
+            }
+        }
+
+        BookingDTO currentBooking = getBookingById(id);
+        if (currentBooking.getRoom().isDoubleRoom()) {
+            currentBooking.setExtraBeds(extraBeds);
+            return true;
+        }
+
+        return false;
     }
 
 
