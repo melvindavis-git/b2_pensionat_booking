@@ -54,6 +54,11 @@ class CustomerServiceTest extends BaseTest {
 
     @Test
     void getCustomerByIdTest() {
+        Customer customer = customerRepository.findAll().getFirst();
+        CustomerDTO customerAsDto = customerService.getCustomerById(customer.getId());
+
+        assertNotNull(customerAsDto);
+        assertEquals(customer.getName(), customerAsDto.getName());
     }
 
     @Test
