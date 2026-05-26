@@ -12,12 +12,5 @@ import java.util.List;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-
-    void findBookingByCustomer_Id(Long id);
-
-    void deleteBookingByCustomer_Id(Long id);
-
     void deleteBookingByCustomer(Customer customer);
-
-    Booking getBookingById(Long id);
 }

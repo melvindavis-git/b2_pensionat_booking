@@ -65,10 +65,10 @@ class BookingServiceTest extends BaseTest {
     void editBookingTest() {
         Booking booking = bookingRepository.findAll().getFirst();
         BookingDTO bookingDto = bookingService.editBooking(booking.getId(), "2026-06-01", "2026-06-02");
-        Booking bookingFromDb= bookingRepository.getBookingById(booking.getId());
+        Booking bookingFromDb = bookingRepository.findById(booking.getId()).orElse(null);
 
         assertEquals(bookingDto.getStartDate(), "2026-06-01");
-        assertEquals(bookingFromDb.getEndDate(), LocalDate.of(2026, 06,02));
+        assertEquals(bookingFromDb.getEndDate(), LocalDate.of(2026, 06, 02));
     }
 
     @Test
