@@ -7,9 +7,6 @@ import org.springframework.boot.jackson.JacksonComponentModule;
 
 public class BookingControllerTest extends BaseTest {
 
-    @Autowired
-    private JacksonComponentModule jsonComponentModule;
-
     @Test
     void canBook() {
 
