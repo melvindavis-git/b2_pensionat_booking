@@ -44,7 +44,7 @@ class BookingServiceTest extends BaseTest {
     void createBookingTest() {
 //        public BookingDTO createBooking(String startDate, String endDate, boolean isDoubleRoom, Long customerId) {
        Customer customer = customerRepository.findAll().getFirst();
-       BookingDTO bookingDTO = bookingService.createBooking("2025-06-01", "2025-06-02", false, customer.getId());
+       BookingDTO bookingDTO = bookingService.createBooking("2025-06-01", "2025-06-02", false, customer.getId(), 0);
        Optional<Booking> bookings = bookingRepository.findById(bookingDTO.getId());
        assertNotNull(bookingDTO);
 

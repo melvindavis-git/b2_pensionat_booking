@@ -19,6 +19,7 @@
   <tr>
     <th>ID</th>
     <th>Rum</th>
+    <th>Extrasängar</th>
     <th>Kund</th>
     <th>Startdatum</th>
     <th>Slutdatum</th>
@@ -26,12 +27,18 @@
   <tr th:each="booking : ${bookings}">
     <td th:text="${booking.id}"></td>
     <td th:text="${booking.room.nr}"></td>
+    <td th:text="${booking.extraBeds}"></td>
     <td th:text="${booking.customer.name}"></td>
     <td th:text="${booking.startDate}"></td>
     <td th:text="${booking.endDate}"></td>
     <td>
       <form th:action="@{/bookings/delete/{id}(id=${booking.id})}" method="post">
         <button type="submit">Delete</button>
+      </form>
+    </td>
+    <td>
+      <form th:action="@{/bookings/edit/{id}(id=${booking.id})}" method="get">
+        <button type="submit">Edit</button>
       </form>
     </td>
   </tr>

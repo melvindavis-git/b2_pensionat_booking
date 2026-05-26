@@ -56,21 +56,20 @@ public class Backend1Application {
             bookingRepo.save(new Booking(r4, c2, d3, d4));
             bookingRepo.save(new Booking(r8, c3, d5, d6));
         };
+
+        //TODO: DTO-klasser (service lagret, från entity till DTO) ✅
+        //TODO: ta bort kund (bara om bokningar ej finns) ✅
+        //TODO: ett rum kan bokas av kund (+en eller fler nätter, datum) ✅
+        //TODO: avboka ett rum och ändra bokning ✅
+        //TODO: ett rum kan vara enkel- eller dubbelrum ✅
+        //TODO: dubbelrum kan ha fler sängar (1-2) ✅
+        //TODO: söka på datum/datumintervall och antal personer - få fram alla lediga rum ✅
+        //TODO: använd validerings-annoteringar i modell-klasser ✅
+        //TODO: låt controllers hantera thymeleaf-mallar ✅
+        //TODO: Hantera fel för inga tillgängliga rum ✅
+        //TODO: ha vettiga felmeddelanden ✅
+        //TODO: enhetstester ✅
+
+
     }
-
-    //TODO: DTO-klasser (service lagret, från entity till DTO) ✅
-    //TODO: ta bort kund (bara om bokningar ej finns) ✅
-    //TODO: ett rum kan bokas av kund (+en eller fler nätter, datum) ✅
-    //TODO: avboka ett rum och ändra bokning ✅
-    //TODO: ett rum kan vara enkel- eller dubbelrum ✅
-    //TODO: dubbelrum kan ha fler sängar (1-2) ✅
-    //TODO: söka på datum/datumintervall och antal personer - få fram alla lediga rum ✅
-    //TODO: använd validerings-annoteringar i modell-klasser ✅
-    //TODO: låt controllers hantera thymeleaf-mallar ❌
-    //TODO: Hantera fel för inga tillgängliga rum ✅
-    //TODO: ha vettiga felmeddelanden ✅
-    //TODO: enhetstester ❌
-
-
-
 }

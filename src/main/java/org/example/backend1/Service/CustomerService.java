@@ -61,7 +61,7 @@ public class CustomerService {
         return CustomerToCustomerDTO(Objects.requireNonNull(customerRepo.findById(id).orElse(null)));
     }
 
-    @Transactional
+
     public CustomerDTO editById(Long customerId, String name, String email, String phone){
         Customer editedCustomer = customerRepo.findById(customerId).orElseThrow(() -> new RuntimeException("Kunden hittades ej"));
         editedCustomer.setName(name);

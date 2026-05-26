@@ -30,6 +30,18 @@
 
     <br><br>
 
+    <div id="extraBedsDiv" style="display: none;">
+        <label for="extraBeds">Lägg till fler sängar: </label>
+        <select name="extraBeds" id="extraBeds">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+    </div>
+
+    <br><br>
+
     <label for="startDate">Startdatum:</label>
     <input type="date" id="startDate" name="startDate">
 
@@ -45,6 +57,21 @@
 </form>
 
 <p th:if="${error}" th:text="${error}" style="color: red;"></p>
+
+
+<script>
+    const roomSelect = document.getElementById("room");
+    const extraBedsDiv = document.getElementById("extraBedsDiv");
+
+    roomSelect.addEventListener("change", function () {
+        if (this.value === "true") {
+            extraBedsDiv.style.display = "block";
+        } else {
+            extraBedsDiv.style.display = "none";
+        }
+    });
+</script>
+
 
 </body>
 </html>

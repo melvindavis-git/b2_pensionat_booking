@@ -43,7 +43,7 @@ public class BookingController {
     @PostMapping()
     public BookingDTO bookRoom(@RequestParam String startDate, @RequestParam String endDate,
                                @RequestParam boolean isDoubleRoom, @RequestParam Long customerId) {
-        return bookingService.createBooking(startDate, endDate, isDoubleRoom, customerId);
+        return bookingService.createBooking(startDate, endDate, isDoubleRoom, customerId, 0);
     }
 
 
