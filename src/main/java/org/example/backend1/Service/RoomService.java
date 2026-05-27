@@ -16,7 +16,7 @@ public class RoomService {
         this.repo = repo;
     }
 
-    public List<RoomDTO> getAllRooms(){
+    public List<RoomDTO> getAllRooms() {
         return repo.findAll().stream().map(r -> RoomToRoomDTO(r)).toList();
     }
 

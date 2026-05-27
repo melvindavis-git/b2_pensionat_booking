@@ -12,9 +12,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 @SpringBootApplication
 public class Backend1Application {
@@ -26,7 +23,6 @@ public class Backend1Application {
     @Bean
     public CommandLineRunner createRooms(RoomRepository roomRepo, CustomerRepository customerRepo, BookingRepository bookingRepo) {
         return (args) -> {
-            //DATES
             LocalDate d1 = LocalDate.of(2026, 5, 18);
             LocalDate d2 = LocalDate.of(2026, 5, 20);
             LocalDate d3 = LocalDate.of(2026, 6, 18);
@@ -34,7 +30,6 @@ public class Backend1Application {
             LocalDate d5 = LocalDate.of(2026, 8, 3);
             LocalDate d6 = LocalDate.of(2026, 8, 7);
 
-            //ROOMS
             Room r1 = roomRepo.save(new Room("A1", true));
             Room r2 = roomRepo.save(new Room("A2", true));
             Room r3 = roomRepo.save(new Room("B3", true));
@@ -46,15 +41,17 @@ public class Backend1Application {
             Room r9 = roomRepo.save(new Room("E9", false));
             Room r10 = roomRepo.save(new Room("E10", false));
 
-            //CUSTOMERS
             Customer c1 = customerRepo.save(new Customer("Melvin", "melvin@gmail.com", "070123456789"));
             Customer c2 = customerRepo.save(new Customer("Tungvall", "tungvall@gmail.com", "070123456789"));
             Customer c3 = customerRepo.save(new Customer("Tim", "tim@gmail.com", "070123456789"));
 
-            //BOOKINGS
             bookingRepo.save(new Booking(r1, c1, d1, d2));
             bookingRepo.save(new Booking(r4, c2, d3, d4));
             bookingRepo.save(new Booking(r8, c3, d5, d6));
+            bookingRepo.save(new Booking(r2, c1, d1, d2));
+            bookingRepo.save(new Booking(r3, c1, d1, d2));
+            bookingRepo.save(new Booking(r4, c1, d1, d2));
+
         };
 
         //TODO: DTO-klasser (service lagret, från entity till DTO) ✅

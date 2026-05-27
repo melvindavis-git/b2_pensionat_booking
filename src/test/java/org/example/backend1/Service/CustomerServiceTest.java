@@ -68,7 +68,7 @@ class CustomerServiceTest extends BaseTest {
         assertEquals(customerDto.getName(), "NewName");
         assertEquals(customerDto.getEmail(), "new@email.com");
         assertEquals(customerDto.getPhone(), "0701998877");
-       assertThrows(RuntimeException.class, () -> customerService.editById(customer.getId(), "name", "new@mail", "0701998877"));
+        assertThrows(RuntimeException.class, () -> customerService.editById(customer.getId(), "name", "new@mail", "0701998877"));
 
 
     }

@@ -60,12 +60,5 @@ public abstract class BaseTest {
         bookingRepository.save(new Booking(room4, customer3, LocalDate.of(2026, 05, 21), LocalDate.of(2026, 05, 22)));
     }
 
-//    @AfterEach
-//    void tearDown() {
-//        bookingRepository.deleteAll();
-//        roomRepository.deleteAll();
-//        customerRepository.deleteAll();
-//    }
-
 
 }

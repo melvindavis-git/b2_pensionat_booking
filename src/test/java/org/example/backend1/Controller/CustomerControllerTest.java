@@ -43,17 +43,14 @@ class CustomerControllerTest extends BaseTest {
                 .count();
 
         assertEquals(1, count);
-        assertTrue(all.getLast().getName().equals("Testsson"));
+        assertEquals("Testsson", all.getLast().getName());
     }
 
-
-    //TODO: [TEST] Dunno if fixed and broken or never finished it.
     @Test
-    //TODO [TEST] Test 400 if customer has booking and 200 if no booking
     @Transactional
     void deleteByIdTest() {
         List<Customer> customers = customerRepository.findAll();
-        Customer customer = customers.get(0);
+        Customer customer = customers.getFirst();
 
         restTestClient.delete()
                 .uri("http://localhost:8080/api/customers/delete/" + customer.getId())
