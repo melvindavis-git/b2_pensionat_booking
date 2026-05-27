@@ -2,8 +2,6 @@ package org.example.backend1.Controller;
 
 import org.example.backend1.BaseTest;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jackson.JacksonComponentModule;
 
 public class BookingControllerTest extends BaseTest {
 

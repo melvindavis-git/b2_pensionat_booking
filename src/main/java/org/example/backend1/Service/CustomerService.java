@@ -5,10 +5,7 @@ import org.example.backend1.Model.Booking;
 import org.example.backend1.Model.Customer;
 import org.example.backend1.Repository.BookingRepository;
 import org.example.backend1.Repository.CustomerRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Objects;
@@ -57,12 +54,12 @@ public class CustomerService {
         return deletedCustomerDTO;
     }
 
-    public CustomerDTO getCustomerById(Long id){
+    public CustomerDTO getCustomerById(Long id) {
         return CustomerToCustomerDTO(Objects.requireNonNull(customerRepo.findById(id).orElse(null)));
     }
 
 
-    public CustomerDTO editById(Long customerId, String name, String email, String phone){
+    public CustomerDTO editById(Long customerId, String name, String email, String phone) {
         Customer editedCustomer = customerRepo.findById(customerId).orElseThrow(() -> new RuntimeException("Kunden hittades ej"));
         editedCustomer.setName(name);
         editedCustomer.setEmail(email);

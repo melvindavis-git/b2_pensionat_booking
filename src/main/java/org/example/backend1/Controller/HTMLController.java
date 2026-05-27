@@ -2,18 +2,14 @@ package org.example.backend1.Controller;
 
 
 import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Valid;
 import org.example.backend1.DTO.BookingDTO;
-import org.example.backend1.DTO.CustomerDTO;
 import org.example.backend1.DTO.RoomDTO;
-import org.example.backend1.Model.Booking;
 import org.example.backend1.Model.Customer;
 import org.example.backend1.Service.BookingService;
 import org.example.backend1.Service.CustomerService;
 import org.example.backend1.Service.RoomService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -117,14 +113,14 @@ public class HTMLController {
     }
 
     @GetMapping("bookings/edit/{id}")
-    public String editBookingPage(@PathVariable Long id, Model model){
+    public String editBookingPage(@PathVariable Long id, Model model) {
         model.addAttribute("booking", bookingService.getBookingById(id));
         return "editBooking";
     }
 
     @PostMapping("bookings/edit/{id}")
     public String editBookingById(@PathVariable Long id, @RequestParam String startDate,
-                                  @RequestParam String endDate, Model model){
+                                  @RequestParam String endDate, Model model) {
         try {
             bookingService.editById(id, startDate, endDate);
         } catch (Exception e) {
@@ -135,9 +131,6 @@ public class HTMLController {
         model.addAttribute("bookings", bookingService.getAllBookings());
         return "bookings";
     }
-
-
-
 
 
     @GetMapping("/customers/register")
@@ -180,7 +173,7 @@ public class HTMLController {
 
 
     @GetMapping("/rooms/available-rooms")
-    public String availableRoomsPage(Model model){
+    public String availableRoomsPage(Model model) {
         model.addAttribute("rooms", roomService.getAllRooms());
         return "listAvailableRooms";
     }

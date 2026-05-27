@@ -36,7 +36,7 @@ public class Booking {
 
     protected int extraBeds;
 
-    public Booking(Room room, Customer customer, LocalDate startDate, LocalDate endDate){
+    public Booking(Room room, Customer customer, LocalDate startDate, LocalDate endDate) {
         this.room = room;
         this.customer = customer;
         this.startDate = startDate;

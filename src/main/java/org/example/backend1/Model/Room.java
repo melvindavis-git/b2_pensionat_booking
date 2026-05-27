@@ -22,7 +22,7 @@ public class Room {
 
     protected boolean isDoubleRoom;
 
-    public Room (String nr, boolean isDoubleRoom) {
+    public Room(String nr, boolean isDoubleRoom) {
         this.nr = nr;
         this.isDoubleRoom = isDoubleRoom;
     }
