@@ -1,0 +1,10 @@
+services:
+  booking-service:
+    build: ./b2_pensionat_booking
+    ports:
+      - "8080:8080"
+
+  customer-service:
+    build: ./b2_pensionat_customer
+    ports:
+      - "8081:8081"
