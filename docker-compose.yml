@@ -1,6 +1,6 @@
 services:
   booking-db:
-    build: ./booking-db
+    image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: pensionat_db
@@ -14,7 +14,7 @@ services:
       start_period: 10s
 
   customer-db:
-    build: ./customer-db
+    image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: pensionat_db
@@ -27,9 +27,8 @@ services:
       retries: 10
       start_period: 10s
 
-
   booking-service:
-    build: ./b2_pensionat_booking
+    build: .
     environment:
       SPRING_PROFILES_ACTIVE: prod
     ports:
@@ -39,7 +38,7 @@ services:
         condition: service_healthy
 
   customer-service:
-    build: ./b2_pensionat_customer
+    build: ../b2_pensionat_customer
     environment:
       SPRING_PROFILES_ACTIVE: prod
     ports:
