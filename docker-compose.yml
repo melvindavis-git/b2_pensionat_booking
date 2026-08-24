@@ -1,10 +1,48 @@
 services:
+  booking-db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: pensionat_db
+      MYSQL_USER: booking_user
+      MYSQL_PASSWORD: booking_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  customer-db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: pensionat_db
+      MYSQL_USER: customer_user
+      MYSQL_PASSWORD: customer_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
   booking-service:
-    build: ./b2_pensionat_booking
+    build: .
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
     ports:
       - "8080:8080"
+    depends_on:
+      customer-db:
+        condition: service_healthy
 
   customer-service:
-    build: ./b2_pensionat_customer
+    build: ../b2_pensionat_customer
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
     ports:
-      - "8081:8081"
+      - "8081:8080"
+    depends_on:
+      booking-db:
+        condition: service_healthy
