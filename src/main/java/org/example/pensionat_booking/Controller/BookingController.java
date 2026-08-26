@@ -51,4 +51,9 @@ public class BookingController {
     public BookingDTO editBooking(@PathVariable Long bookingID, @PathVariable String startDate, @PathVariable String endDate) {
         return bookingService.editBooking(bookingID, startDate, endDate);
     }
+
+    @GetMapping("/customer/{customerId}/exists")
+    public boolean customerHasBookings(@PathVariable Long customerId) {
+        return bookingService.customerHasBookings(customerId);
+    }
 }

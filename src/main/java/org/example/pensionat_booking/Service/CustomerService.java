@@ -6,6 +6,7 @@ import org.example.pensionat_booking.Model.Customer;
 import org.example.pensionat_booking.Repository.BookingRepository;
 import org.example.pensionat_booking.Repository.CustomerRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Objects;
@@ -15,6 +16,7 @@ public class CustomerService {
 
     private final CustomerRepository customerRepo;
     private final BookingRepository bookingRepo;
+    RestTemplate restTemplate = new RestTemplate();
 
     public CustomerService(CustomerRepository customerRepo, BookingRepository bookingRepo, BookingRepository bookingRepo1) {
         this.customerRepo = customerRepo;
@@ -39,19 +41,16 @@ public class CustomerService {
         return CustomerToCustomerDTO(newCustomer);
     }
 
-    public CustomerDTO deleteById(Long customerId) {
-
-        Customer deletedCustomer = customerRepo.findById(customerId).orElseThrow(() ->
-                new RuntimeException("Kunden hittades ej."));
-        CustomerDTO deletedCustomerDTO = CustomerToCustomerDTO(deletedCustomer);
+    public boolean deleteById(Long customerId) {
 
         for (Booking booking : bookingRepo.findAll()) {
             if (booking.getCustomer().getId().equals(customerId)) {
-                throw new RuntimeException(customerRepo.findById(customerId).get().getName() + " har en bokning.");
+                return false;
             }
+
         }
-        customerRepo.deleteById(customerId);
-        return deletedCustomerDTO;
+        boolean result = restTemplate.getForObject("http://localhost:8080/customers/delete/{customerId}", boolean.class);
+        return result;
     }
 
     public CustomerDTO getCustomerById(Long id) {

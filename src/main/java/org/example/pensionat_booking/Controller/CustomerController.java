@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/customers")
+@RequestMapping("/api/customers")
 public class CustomerController {
 
     private final CustomerService service;
@@ -36,11 +36,13 @@ public class CustomerController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public CustomerDTO deleteById(@PathVariable Long id) {
+    public String deleteById(@PathVariable Long id) {
         log.info("DELETE request to delete customer");
-        CustomerDTO customerDTO = service.deleteById(id);
+        boolean result = service.deleteById(id);
         log.info("Customer with id {} deleted successfully", id);
-        return customerDTO;
+        return "fuck";
     }
+
+
 
 }
