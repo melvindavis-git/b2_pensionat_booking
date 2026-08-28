@@ -68,13 +68,13 @@ public class HTMLController {
     }
 
 
-    @PostMapping("/customers/edit/{id}")
-    public String editCustomerById(@PathVariable Long id, @RequestParam String name,
-                                   @RequestParam String email, @RequestParam String phone, Model model) {
-        customerService.editById(id, name, email, phone);
-        model.addAttribute("customers", customerService.getAllCustomers());
-        return "customers";
-    }
+//    @PostMapping("/customers/edit/{id}")
+//    public String editCustomerById(@PathVariable Long id, @RequestParam String name,
+//                                   @RequestParam String email, @RequestParam String phone, Model model) {
+//        customerService.editById(id, name, email, phone);
+//        model.addAttribute("customers", customerService.getAllCustomers());
+//        return "customers";
+//    }
 
     @PostMapping("/bookings/delete/{id}")
     public String removeBooking(@PathVariable Long id, Model model) {

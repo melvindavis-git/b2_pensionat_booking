@@ -61,15 +61,15 @@ class CustomerServiceTest extends BaseTest {
         assertEquals(customer.getName(), customerAsDto.getName());
     }
 
-    @Test
-    void editById() {
-        Customer customer = customerRepository.findAll().getFirst();
-        CustomerDTO customerDto = customerService.editById(customer.getId(), "NewName", "new@email.com", "0701998877");
-        assertEquals(customerDto.getName(), "NewName");
-        assertEquals(customerDto.getEmail(), "new@email.com");
-        assertEquals(customerDto.getPhone(), "0701998877");
-        assertThrows(RuntimeException.class, () -> customerService.editById(customer.getId(), "name", "new@mail", "0701998877"));
-
-
-    }
+//    @Test
+//    void editById() {
+//        Customer customer = customerRepository.findAll().getFirst();
+//        CustomerDTO customerDto = customerService.editById(customer.getId(), "NewName", "new@email.com", "0701998877");
+//        assertEquals(customerDto.getName(), "NewName");
+//        assertEquals(customerDto.getEmail(), "new@email.com");
+//        assertEquals(customerDto.getPhone(), "0701998877");
+//        assertThrows(RuntimeException.class, () -> customerService.editById(customer.getId(), "name", "new@mail", "0701998877"));
+//
+//
+//    }
 }

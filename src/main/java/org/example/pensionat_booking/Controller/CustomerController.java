@@ -45,6 +45,11 @@ public class CustomerController {
         return result;
     }
 
+    @PutMapping("/edit")
+    public CustomerDTO editCustomer(@RequestBody CustomerDTO customerDTO) {
+        return service.editById(customerDTO);
+    }
+
 
 
 }

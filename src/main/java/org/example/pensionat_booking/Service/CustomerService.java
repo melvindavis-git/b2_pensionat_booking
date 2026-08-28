@@ -5,6 +5,8 @@ import org.example.pensionat_booking.Model.Booking;
 import org.example.pensionat_booking.Model.Customer;
 import org.example.pensionat_booking.Repository.BookingRepository;
 import org.example.pensionat_booking.Repository.CustomerRepository;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -58,17 +60,15 @@ public class CustomerService {
     }
 
     public CustomerDTO getCustomerById(Long id) {
-        return CustomerToCustomerDTO(Objects.requireNonNull(customerRepo.findById(id).orElse(null)));
+        return restTemplate.getForObject("http://localhost:8081/customers/{id}", CustomerDTO.class, id);
     }
+    public CustomerDTO editById(CustomerDTO editedCustomer) {
 
-
-    public CustomerDTO editById(Long customerId, String name, String email, String phone) {
-        Customer editedCustomer = customerRepo.findById(customerId).orElseThrow(() -> new RuntimeException("Kunden hittades ej"));
-        editedCustomer.setName(name);
-        editedCustomer.setEmail(email);
-        editedCustomer.setPhone(phone);
-        customerRepo.save(editedCustomer);
-        return CustomerToCustomerDTO(editedCustomer);
+        return restTemplate.exchange(
+                "http://localhost:8081/customers/editCst",
+                HttpMethod.PUT,
+                new HttpEntity<>(editedCustomer),
+                CustomerDTO.class
+        ).getBody();
     }
-
 }
