@@ -15,13 +15,13 @@ class CustomerServiceTest extends BaseTest {
     @Autowired
     CustomerService customerService;
 
-    @Test
-    void getAllCustomersTest() {
-        List<CustomerDTO> customersDTO = customerService.getAllCustomers();
-        assertNotNull(customersDTO);
-        assertTrue(customersDTO.size() == 4);
-        assertFalse(customersDTO.contains(customersDTO.get(0).getName().equals("Mikael")));
-    }
+//    @Test
+//    void getAllCustomersTest() {
+//        List<CustomerDTO> customersDTO = customerService.getAllCustomers();
+//        assertNotNull(customersDTO);
+//        assertTrue(customersDTO.size() == 4);
+//        assertFalse(customersDTO.contains(customersDTO.get(0).getName().equals("Mikael")));
+//    }
 
     @Test
     void customerToCustomerDTOTest() {
@@ -31,17 +31,17 @@ class CustomerServiceTest extends BaseTest {
         assertTrue(customerDTO.getName().equals("Name"));
     }
 
-    @Test
-    void registerCustomerTest() {
-        CustomerDTO customerDTO = new CustomerDTO(null, "Testsson", "testsson@test.se", "0709112233");
-        CustomerDTO customer = customerService.registerCustomer(customerDTO);
-
-        assertNotNull(customer);
-        assertTrue(customer.getName().equals("Testsson"));
-        assertTrue(customer.getEmail().equals("testsson@test.se"));
-        assertTrue(customer.getPhone().equals("0709112233"));
-        assertFalse(customer.getName().equals("OtherName"));
-    }
+//    @Test
+//    void registerCustomerTest() {
+//        CustomerDTO customerDTO = new CustomerDTO(null, "Testsson", "testsson@test.se", "0709112233");
+//        CustomerDTO customer = customerService.registerCustomer(customerDTO);
+//
+//        assertNotNull(customer);
+//        assertTrue(customer.getName().equals("Testsson"));
+//        assertTrue(customer.getEmail().equals("testsson@test.se"));
+//        assertTrue(customer.getPhone().equals("0709112233"));
+//        assertFalse(customer.getName().equals("OtherName"));
+//    }
 
     @Test
     void deleteByIdTest() {

@@ -5,6 +5,7 @@ import org.example.pensionat_booking.Model.Booking;
 import org.example.pensionat_booking.Model.Customer;
 import org.example.pensionat_booking.Repository.BookingRepository;
 import org.example.pensionat_booking.Repository.CustomerRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -24,7 +25,7 @@ public class CustomerService {
     }
 
     public List<CustomerDTO> getAllCustomers() {
-        return customerRepo.findAll().stream().map(c -> CustomerToCustomerDTO(c)).toList();
+        return restTemplate.getForObject("http://localhost:8081/customers/all", List.class);
     }
 
     public CustomerDTO CustomerToCustomerDTO(Customer c) {
@@ -32,13 +33,16 @@ public class CustomerService {
     }
 
 
-    public CustomerDTO registerCustomer(CustomerDTO customerDTO) {
+    public ResponseEntity<CustomerDTO> registerCustomer(CustomerDTO inputCustomer) {
 
-        Customer newCustomer = new Customer(customerDTO.getName(), customerDTO.getEmail(), customerDTO.getPhone());
-
-        customerRepo.save(newCustomer);
-
-        return CustomerToCustomerDTO(newCustomer);
+        try{
+            CustomerDTO savedCst = restTemplate.postForObject("http://localhost:8081/customers/register", inputCustomer, CustomerDTO.class);
+            return ResponseEntity.ok(savedCst);
+        }
+        catch (Exception e){
+            System.out.println(e);
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     public boolean deleteById(Long customerId) {

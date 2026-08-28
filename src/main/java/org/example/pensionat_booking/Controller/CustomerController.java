@@ -5,7 +5,9 @@ import org.example.pensionat_booking.DTO.CustomerDTO;
 import org.example.pensionat_booking.Service.CustomerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -23,13 +25,13 @@ public class CustomerController {
     @GetMapping()
     public List<CustomerDTO> getAllCustomers() {
         log.info("GET request for all customers");
-        List<CustomerDTO> customers = service.getAllCustomers();
-        log.info("Returned {} customers", customers.size());
         return service.getAllCustomers();
     }
 
+
+
     @PostMapping("/register")
-    public CustomerDTO registerCustomers(@Valid @RequestBody CustomerDTO customerDTO) {
+    public ResponseEntity<CustomerDTO> registerCustomers(@Valid @RequestBody CustomerDTO customerDTO) {
         log.info("POST request to register customer");
         log.info("Customer {} registered successfully", customerDTO.getName());
         return service.registerCustomer(customerDTO);
