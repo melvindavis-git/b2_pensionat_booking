@@ -36,11 +36,11 @@ public class CustomerController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public String deleteById(@PathVariable Long id) {
+    public boolean deleteById(@PathVariable Long id) {
         log.info("DELETE request to delete customer");
         boolean result = service.deleteById(id);
         log.info("Customer with id {} deleted successfully", id);
-        return "fuck";
+        return result;
     }
 
 

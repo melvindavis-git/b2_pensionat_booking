@@ -49,8 +49,8 @@ public class CustomerService {
             }
 
         }
-        boolean result = restTemplate.getForObject("http://localhost:8080/customers/delete/{customerId}", boolean.class);
-        return result;
+        restTemplate.delete("http://localhost:8081/customers/delete/{customerId}", customerId);
+        return true;
     }
 
     public CustomerDTO getCustomerById(Long id) {
