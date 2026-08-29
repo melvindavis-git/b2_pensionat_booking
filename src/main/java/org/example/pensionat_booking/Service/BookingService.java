@@ -1,6 +1,7 @@
 package org.example.pensionat_booking.Service;
 
 import org.example.pensionat_booking.DTO.BookingDTO;
+import org.example.pensionat_booking.DTO.CustomerDTO;
 import org.example.pensionat_booking.DTO.RoomDTO;
 import org.example.pensionat_booking.Model.Booking;
 import org.example.pensionat_booking.Model.Customer;
@@ -9,6 +10,7 @@ import org.example.pensionat_booking.Repository.BookingRepository;
 import org.example.pensionat_booking.Repository.CustomerRepository;
 import org.example.pensionat_booking.Repository.RoomRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -20,13 +22,15 @@ public class BookingService {
 
     private final BookingRepository bookingRepo;
     private final RoomRepository roomRepo;
-    private final CustomerRepository customerRepository;
+    RestTemplate restTemplate = new RestTemplate();
 
 
-    public BookingService(BookingRepository bookingRepo, RoomRepository roomRepo, CustomerRepository customerRepository) {
+
+
+    public BookingService(BookingRepository bookingRepo, RoomRepository roomRepo) {
         this.bookingRepo = bookingRepo;
         this.roomRepo = roomRepo;
-        this.customerRepository = customerRepository;
+
     }
 
     public List<BookingDTO> getAllBookings() {
@@ -34,12 +38,18 @@ public class BookingService {
     }
 
     public BookingDTO BookingToBookingDTO(Booking b) {
-        return BookingDTO.builder().id(b.getId()).room
-                        (new Room(b.getRoom().getId(), b.getRoom().getNr(), b.getRoom().isDoubleRoom())).customer
-                        (new Customer(b.getCustomer().getId(), b.getCustomer().getName(), b.getCustomer().getEmail(),
-                                b.getCustomer().getPhone())).startDate(b.getStartDate().toString())
-
-                .endDate(b.getEndDate().toString()).extraBeds(b.getExtraBeds()).build();
+        return BookingDTO.builder()
+                .id(b.getId())
+                .room(new Room(
+                        b.getRoom().getId(),
+                        b.getRoom().getNr(),
+                        b.getRoom().isDoubleRoom()
+                ))
+                .customerId(b.getCustomerId())
+                .startDate(b.getStartDate().toString())
+                .endDate(b.getEndDate().toString())
+                .extraBeds(b.getExtraBeds())
+                .build();
     }
 
     public List<RoomDTO> canBook(String startDate, String endDate, boolean doubleRoom) {
@@ -108,11 +118,10 @@ public class BookingService {
 
 
         Room room = roomRepo.findById(availableRooms.getFirst().getId()).orElse(null);
-        Customer currentCustomer = customerRepository.findById(customerId).orElseThrow(() ->
-                new RuntimeException("Kunden hittades inte."));
+        CustomerDTO currentCustomer = restTemplate.getForObject("http://localhost:8080/api/customers/{id}", CustomerDTO.class, customerId);
 
 
-        Booking currentBooking = new Booking(room, currentCustomer, requestedStartDate, requestedEndDate);
+        Booking currentBooking = new Booking(room, currentCustomer.getId(), requestedStartDate, requestedEndDate);
         currentBooking.setExtraBeds(extraBeds);
         bookingRepo.save(currentBooking);
         return BookingToBookingDTO(currentBooking);

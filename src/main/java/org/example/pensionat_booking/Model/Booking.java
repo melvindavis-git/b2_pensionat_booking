@@ -24,9 +24,9 @@ public class Booking {
     @JoinColumn(name = "room_id")
     protected Room room;
 
-    @ManyToOne
+
     @JoinColumn(name = "customer_id")
-    protected Customer customer;
+    protected Long customerId;
 
 
     protected LocalDate startDate;
@@ -36,9 +36,9 @@ public class Booking {
 
     protected int extraBeds;
 
-    public Booking(Room room, Customer customer, LocalDate startDate, LocalDate endDate) {
+    public Booking(Room room, Long customerId, LocalDate startDate, LocalDate endDate) {
         this.room = room;
-        this.customer = customer;
+        this.customerId = customerId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.extraBeds = 0;

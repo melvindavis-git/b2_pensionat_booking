@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pensionat - Rum</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <span class="brand">Pensionat</span>
+      <a href="/index.html" data-nav>Start</a>
+      <a href="/customers.html" data-nav>Kunder</a>
+      <a href="/rooms.html" data-nav>Rum</a>
+      <a href="/bookings.html" data-nav>Bokningar</a>
+    </nav>
+  </header>
+  <main>
+    <h1>Rum</h1>
+    <div id="alert"></div>
+    <div id="tableWrap"></div>
+  </main>
+
+  <script src="/js/api.js"></script>
+  <script>
+    const alertBox = document.getElementById("alert");
+    const tableWrap = document.getElementById("tableWrap");
+
+    async function load() {
+      try {
+        const rooms = await Api.get("/api/rooms");
+        if (!rooms.length) {
+          tableWrap.innerHTML = `<div class="empty">Inga rum finns registrerade.</div>`;
+          return;
+        }
+        tableWrap.innerHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>Rumsnr</th>
+                <th>Typ</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rooms.map(r => `
+                <tr>
+                  <td data-label="Rumsnr">${escapeHtml(r.nr)}</td>
+                  <td data-label="Typ">${r.doubleRoom ? "Dubbelrum" : "Enkelrum"}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `;
+      } catch (err) {
+        showAlert(alertBox, err.message);
+      }
+    }
+
+    load();
+  </script>
+</body>
+</html>

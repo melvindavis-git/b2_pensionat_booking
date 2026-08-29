@@ -50,7 +50,7 @@ public class CustomerService {
     public boolean deleteById(Long customerId) {
 
         for (Booking booking : bookingRepo.findAll()) {
-            if (booking.getCustomer().getId().equals(customerId)) {
+            if (booking.getCustomerId().equals(customerId)) {
                 return false;
             }
 

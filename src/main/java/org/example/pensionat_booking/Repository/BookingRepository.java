@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-    void deleteBookingByCustomer(Customer customer);
+    void deleteBookingByCustomerId(Long customerId);
 
     boolean existsByCustomerId(Long customerId);
 }

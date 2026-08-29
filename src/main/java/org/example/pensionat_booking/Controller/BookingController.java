@@ -27,8 +27,7 @@ public class BookingController {
     }
 
     @GetMapping("/available-rooms")
-    public List<RoomDTO> canBook(@RequestParam String startDate, @RequestParam String endDate,
-                                 @RequestParam boolean doubleRoom) {
+    public List<RoomDTO> canBook(@RequestParam String startDate, @RequestParam String endDate, @RequestParam boolean doubleRoom) {
         return bookingService.canBook(startDate, endDate, doubleRoom);
     }
 
@@ -41,9 +40,8 @@ public class BookingController {
     }
 
     @PostMapping()
-    public BookingDTO bookRoom(@RequestParam String startDate, @RequestParam String endDate,
-                               @RequestParam boolean isDoubleRoom, @RequestParam Long customerId) {
-        return bookingService.createBooking(startDate, endDate, isDoubleRoom, customerId, 0);
+    public BookingDTO bookRoom(@RequestParam String startDate, @RequestParam String endDate, @RequestParam boolean isDoubleRoom, @RequestParam Long customerId, @RequestParam(defaultValue = "0") int extraBeds) {
+        return bookingService.createBooking(startDate, endDate, isDoubleRoom, customerId, extraBeds);
     }
 
 

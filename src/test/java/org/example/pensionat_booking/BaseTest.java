@@ -55,9 +55,9 @@ public abstract class BaseTest {
         roomRepository.save(room3);
         roomRepository.save(room4);
 
-        bookingRepository.save(new Booking(room1, customer1, LocalDate.of(2026, 05, 10), LocalDate.of(2026, 05, 20)));
-        bookingRepository.save(new Booking(room4, customer2, LocalDate.of(2026, 05, 15), LocalDate.of(2026, 05, 20)));
-        bookingRepository.save(new Booking(room4, customer3, LocalDate.of(2026, 05, 21), LocalDate.of(2026, 05, 22)));
+        bookingRepository.save(new Booking(room1, 1L, LocalDate.of(2026, 05, 10), LocalDate.of(2026, 05, 20)));
+        bookingRepository.save(new Booking(room4, 2L, LocalDate.of(2026, 05, 15), LocalDate.of(2026, 05, 20)));
+        bookingRepository.save(new Booking(room4, 3L, LocalDate.of(2026, 05, 21), LocalDate.of(2026, 05, 22)));
     }
 
 

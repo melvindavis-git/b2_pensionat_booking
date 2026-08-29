@@ -45,12 +45,12 @@ public class PensionatBookingApplication {
             Customer c2 = customerRepo.save(new Customer("Tungvall", "tungvall@gmail.com", "070123456789"));
             Customer c3 = customerRepo.save(new Customer("Tim", "tim@gmail.com", "070123456789"));
 
-            bookingRepo.save(new Booking(r1, c1, d1, d2));
-            bookingRepo.save(new Booking(r4, c2, d3, d4));
-            bookingRepo.save(new Booking(r8, c3, d5, d6));
-            bookingRepo.save(new Booking(r2, c1, d1, d2));
-            bookingRepo.save(new Booking(r3, c1, d1, d2));
-            bookingRepo.save(new Booking(r4, c1, d1, d2));
+            bookingRepo.save(new Booking(r1, c1.getId(), d1, d2));
+            bookingRepo.save(new Booking(r4, c2.getId(), d3, d4));
+            bookingRepo.save(new Booking(r8, c3.getId(), d5, d6));
+            bookingRepo.save(new Booking(r2, c1.getId(), d1, d2));
+            bookingRepo.save(new Booking(r3, c1.getId(), d1, d2));
+            bookingRepo.save(new Booking(r4, c1.getId(), d1, d2));
 
         };
 

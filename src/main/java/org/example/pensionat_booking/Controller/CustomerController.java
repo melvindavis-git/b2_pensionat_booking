@@ -28,6 +28,14 @@ public class CustomerController {
         return service.getAllCustomers();
     }
 
+    @GetMapping("/{id}")
+    public CustomerDTO getById(@PathVariable Long id) {
+        log.info("DELETE request to delete customer");
+        CustomerDTO result = service.getCustomerById(id);
+        log.info("Customer with id {} deleted successfully", id);
+        return result;
+    }
+
 
 
     @PostMapping("/register")
