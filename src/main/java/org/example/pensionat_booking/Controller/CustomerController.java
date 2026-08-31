@@ -37,7 +37,6 @@ public class CustomerController {
     }
 
 
-
     @PostMapping("/register")
     public ResponseEntity<CustomerDTO> registerCustomers(@Valid @RequestBody CustomerDTO customerDTO) {
         log.info("POST request to register customer");
@@ -46,18 +45,16 @@ public class CustomerController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public boolean deleteById(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         log.info("DELETE request to delete customer");
-        boolean result = service.deleteById(id);
         log.info("Customer with id {} deleted successfully", id);
-        return result;
+        return service.deleteById(id);
     }
 
     @PutMapping("/edit")
     public CustomerDTO editCustomer(@RequestBody CustomerDTO customerDTO) {
         return service.editById(customerDTO);
     }
-
 
 
 }
