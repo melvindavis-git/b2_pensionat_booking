@@ -21,7 +21,7 @@ public class BookingDTO {
     private Long id;
 
     private Room room;
-    private Customer customer;
+    private Long customerId;
     private String startDate;
     private String endDate;
     private int extraBeds;
