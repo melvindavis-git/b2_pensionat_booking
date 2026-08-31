@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: booking-db
+  name: customer-db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: booking-db
+      app: customer-db
   template:
     metadata:
       labels:
-        app: booking-db
+        app: customer-db
     spec:
       containers:
         - name: mysql
@@ -19,9 +19,9 @@ spec:
             - name: MYSQL_ROOT_PASSWORD
               value: root
             - name: MYSQL_USER
-              value: booking_user
+              value: customer_user
             - name: MYSQL_PASSWORD
-              value: booking_password
+              value: customer_password
             - name: MYSQL_DATABASE
               value: pensionat_db
           ports:
@@ -32,10 +32,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: booking-db
+  name: customer-db
 spec:
   selector:
-    app: booking-db
+    app: customer-db
   ports:
     - port: 3306
       targetPort: 3306
