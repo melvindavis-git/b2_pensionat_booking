@@ -4,30 +4,32 @@ import org.example.pensionat_booking.DTO.CustomerDTO;
 import org.example.pensionat_booking.Model.Booking;
 import org.example.pensionat_booking.Model.Customer;
 import org.example.pensionat_booking.Repository.BookingRepository;
-import org.example.pensionat_booking.Repository.CustomerRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class CustomerService {
 
-    private final CustomerRepository customerRepo;
     private final BookingRepository bookingRepo;
     RestTemplate restTemplate = new RestTemplate();
+    String baseUrl;
 
-    public CustomerService(CustomerRepository customerRepo, BookingRepository bookingRepo, BookingRepository bookingRepo1) {
-        this.customerRepo = customerRepo;
+    public CustomerService(BookingRepository bookingRepo, @Value("${customer-service.base-url}") String baseUrl) {
         this.bookingRepo = bookingRepo;
+        this.baseUrl = baseUrl;
     }
 
     public List<CustomerDTO> getAllCustomers() {
-        return restTemplate.getForObject("http://localhost:8081/customers/all", List.class);
+        return restTemplate.getForObject(baseUrl + "/customers/all", List.class);
     }
 
     public CustomerDTO CustomerToCustomerDTO(Customer c) {
@@ -38,34 +40,37 @@ public class CustomerService {
     public ResponseEntity<CustomerDTO> registerCustomer(CustomerDTO inputCustomer) {
 
         try{
-            CustomerDTO savedCst = restTemplate.postForObject("http://localhost:8081/customers/register", inputCustomer, CustomerDTO.class);
+            CustomerDTO savedCst = restTemplate.postForObject(baseUrl + "/customers/register", inputCustomer, CustomerDTO.class);
             return ResponseEntity.ok(savedCst);
         }
-        catch (Exception e){
-            System.out.println(e);
-            return ResponseEntity.internalServerError().build();
+        catch (HttpClientErrorException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
-    public boolean deleteById(Long customerId) {
+    public ResponseEntity<Void> deleteById(Long customerId) {
 
         for (Booking booking : bookingRepo.findAll()) {
             if (booking.getCustomerId().equals(customerId)) {
-                return false;
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Personen har bokningar");
             }
 
         }
-        restTemplate.delete("http://localhost:8081/customers/delete/{customerId}", customerId);
-        return true;
+        try {
+            restTemplate.delete(baseUrl + "/customers/delete/{customerId}", customerId);
+            return ResponseEntity.ok().build();
+        } catch (HttpClientErrorException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getResponseBodyAsString());
+        }
     }
 
     public CustomerDTO getCustomerById(Long id) {
-        return restTemplate.getForObject("http://localhost:8081/customers/{id}", CustomerDTO.class, id);
+        return restTemplate.getForObject(baseUrl + "/customers/{id}", CustomerDTO.class, id);
     }
     public CustomerDTO editById(CustomerDTO editedCustomer) {
 
         return restTemplate.exchange(
-                "http://localhost:8081/customers/editCst",
+                baseUrl + "/customers/editCst",
                 HttpMethod.PUT,
                 new HttpEntity<>(editedCustomer),
                 CustomerDTO.class
