@@ -23,7 +23,7 @@ public class CustomerController {
     }
 
     @GetMapping()
-    public List<CustomerDTO> getAllCustomers() {
+    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
         log.info("GET request for all customers");
         return service.getAllCustomers();
     }

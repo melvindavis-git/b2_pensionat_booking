@@ -28,8 +28,9 @@ public class CustomerService {
         this.baseUrl = baseUrl;
     }
 
-    public List<CustomerDTO> getAllCustomers() {
-        return restTemplate.getForObject(baseUrl + "/customers/all", List.class);
+    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
+        List<CustomerDTO> customers = restTemplate.getForObject(baseUrl + "/customers/all", List.class);
+        return ResponseEntity.status(HttpStatus.OK).body(customers);
     }
 
     public CustomerDTO CustomerToCustomerDTO(Customer c) {
