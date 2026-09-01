@@ -43,9 +43,8 @@ public class CustomerService {
             CustomerDTO savedCst = restTemplate.postForObject(baseUrl + "/customers/register", inputCustomer, CustomerDTO.class);
             return ResponseEntity.ok(savedCst);
         }
-        catch (Exception e){
-            System.out.println(e);
-            return ResponseEntity.internalServerError().build();
+        catch (HttpClientErrorException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
