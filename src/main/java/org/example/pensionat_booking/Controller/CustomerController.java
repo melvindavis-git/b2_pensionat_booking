@@ -29,11 +29,8 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}")
-    public CustomerDTO getById(@PathVariable Long id) {
-        log.info("DELETE request to delete customer");
-        CustomerDTO result = service.getCustomerById(id);
-        log.info("Customer with id {} deleted successfully", id);
-        return result;
+    public ResponseEntity<CustomerDTO> getById(@PathVariable Long id) {
+        return service.getCustomerById(id);
     }
 
 
@@ -46,8 +43,6 @@ public class CustomerController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-        log.info("DELETE request to delete customer");
-        log.info("Customer with id {} deleted successfully", id);
         return service.deleteById(id);
     }
 

@@ -40,12 +40,13 @@ public class CustomerService {
 
     public ResponseEntity<CustomerDTO> registerCustomer(CustomerDTO inputCustomer) {
 
+        CustomerDTO savedCst = new CustomerDTO();
         try{
-            CustomerDTO savedCst = restTemplate.postForObject(baseUrl + "/customers/register", inputCustomer, CustomerDTO.class);
-            return ResponseEntity.ok(savedCst);
+            savedCst = restTemplate.postForObject(baseUrl + "/customers/register", inputCustomer, CustomerDTO.class);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedCst);
         }
         catch (HttpClientErrorException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(savedCst);
         }
     }
 
@@ -55,18 +56,29 @@ public class CustomerService {
             if (booking.getCustomerId().equals(customerId)) {
                 throw new ResponseStatusException(HttpStatus.CONFLICT, "Personen har bokningar");
             }
-
         }
         try {
             restTemplate.delete(baseUrl + "/customers/delete/{customerId}", customerId);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         } catch (HttpClientErrorException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getResponseBodyAsString());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
-    public CustomerDTO getCustomerById(Long id) {
-        return restTemplate.getForObject(baseUrl + "/customers/{id}", CustomerDTO.class, id);
+    public ResponseEntity<CustomerDTO> getCustomerById(Long id) {
+
+        CustomerDTO customerByID = new CustomerDTO();
+        try {
+            restTemplate.getForObject(baseUrl + "/customers/{id}", CustomerDTO.class, id);
+        }
+        catch (HttpClientErrorException.NotFound e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(customerByID);
+        }
+        catch (HttpClientErrorException.BadRequest e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(customerByID);
+        }
+        customerByID = restTemplate.getForObject(baseUrl + "/customers/{id}", CustomerDTO.class, id);
+        return ResponseEntity.status(HttpStatus.OK).body(customerByID);
     }
     public CustomerDTO editById(CustomerDTO editedCustomer) {
 
