@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -29,8 +30,13 @@ public class CustomerService {
     }
 
     public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
-        List<CustomerDTO> customers = restTemplate.getForObject(baseUrl + "/customers/all", List.class);
-        return ResponseEntity.status(HttpStatus.OK).body(customers);
+        try {
+            List<CustomerDTO> customers = restTemplate.getForObject(baseUrl + "/customers/all", List.class);
+            return ResponseEntity.status(HttpStatus.OK).body(customers);
+
+        } catch (HttpClientErrorException.BadRequest e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
     public CustomerDTO CustomerToCustomerDTO(Customer c) {
@@ -69,7 +75,7 @@ public class CustomerService {
 
         CustomerDTO customerByID = new CustomerDTO();
         try {
-            restTemplate.getForObject(baseUrl + "/customers/{id}", CustomerDTO.class, id);
+            restTemplate.getForEntity(baseUrl + "/customers/{id}", CustomerDTO.class, id);
         }
         catch (HttpClientErrorException.NotFound e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(customerByID);
@@ -77,16 +83,26 @@ public class CustomerService {
         catch (HttpClientErrorException.BadRequest e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(customerByID);
         }
+        catch (Exception e){
+            e.printStackTrace();
+        }
         customerByID = restTemplate.getForObject(baseUrl + "/customers/{id}", CustomerDTO.class, id);
         return ResponseEntity.status(HttpStatus.OK).body(customerByID);
     }
-    public CustomerDTO editById(CustomerDTO editedCustomer) {
+    public ResponseEntity<CustomerDTO> editById(CustomerDTO editedCustomer) {
 
-        return restTemplate.exchange(
-                baseUrl + "/customers/editCst",
-                HttpMethod.PUT,
-                new HttpEntity<>(editedCustomer),
-                CustomerDTO.class
-        ).getBody();
+        try {
+            CustomerDTO editedCst = restTemplate.exchange(baseUrl + "/customers/editCst",
+                    HttpMethod.PUT,
+                    new HttpEntity<>(editedCustomer),
+                    CustomerDTO.class
+            ).getBody();
+            return ResponseEntity.status(HttpStatus.OK).body(editedCst);
+
+        } catch (HttpClientErrorException.NotFound e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (HttpClientErrorException.BadRequest e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 }
