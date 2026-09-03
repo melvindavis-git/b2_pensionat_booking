@@ -37,6 +37,7 @@ services:
       customer-db:
         condition: service_healthy
 
+
   customer-service:
     build: ../b2_pensionat_customer
     environment:

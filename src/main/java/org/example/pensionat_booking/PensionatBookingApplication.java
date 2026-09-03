@@ -1,11 +1,11 @@
 package org.example.pensionat_booking;
 
+import org.example.pensionat_booking.DTO.CustomerDTO;
 import org.example.pensionat_booking.Model.Booking;
-import org.example.pensionat_booking.Model.Customer;
 import org.example.pensionat_booking.Model.Room;
 import org.example.pensionat_booking.Repository.BookingRepository;
-import org.example.pensionat_booking.Repository.CustomerRepository;
 import org.example.pensionat_booking.Repository.RoomRepository;
+import org.example.pensionat_booking.Service.CustomerService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,53 +20,61 @@ public class PensionatBookingApplication {
         SpringApplication.run(PensionatBookingApplication.class, args);
     }
 
-    @Bean
-    public CommandLineRunner createRooms(RoomRepository roomRepo, CustomerRepository customerRepo, BookingRepository bookingRepo) {
-        return (args) -> {
-            LocalDate d1 = LocalDate.of(2026, 5, 18);
-            LocalDate d2 = LocalDate.of(2026, 5, 20);
-            LocalDate d3 = LocalDate.of(2026, 6, 18);
-            LocalDate d4 = LocalDate.of(2026, 6, 20);
-            LocalDate d5 = LocalDate.of(2026, 8, 3);
-            LocalDate d6 = LocalDate.of(2026, 8, 7);
+//    @Bean
+//    public CommandLineRunner createRooms(RoomRepository roomRepo,
+//                                         BookingRepository bookingRepo, CustomerService customerService) {
+//        return (args) -> {
+//            bookingRepo.deleteAll();
+//            roomRepo.deleteAll();
+////            LocalDate d1 = LocalDate.of(2026, 5, 18);
+//            LocalDate d2 = LocalDate.of(2026, 5, 20);
+//            LocalDate d3 = LocalDate.of(2026, 6, 18);
+//            LocalDate d4 = LocalDate.of(2026, 6, 20);
+//            LocalDate d5 = LocalDate.of(2026, 8, 3);
+//            LocalDate d6 = LocalDate.of(2026, 8, 7);
+//
+//            Room r1 = roomRepo.save(new Room("A1", true));
+//            Room r2 = roomRepo.save(new Room("A2", true));
+//            Room r3 = roomRepo.save(new Room("B3", true));
+//            Room r4 = roomRepo.save(new Room("B4", true));
+//            Room r5 = roomRepo.save(new Room("C5", true));
+//            Room r6 = roomRepo.save(new Room("C6", false));
+//            Room r7 = roomRepo.save(new Room("D7", false));
+//            Room r8 = roomRepo.save(new Room("D8", false));
+//            Room r9 = roomRepo.save(new Room("E9", false));
+//            Room r10 = roomRepo.save(new Room("E10", false));
+//
+//            CustomerDTO c1 = new CustomerDTO(1L, "Melvin", "melvin@gmail.com", "070123456789");
+//            CustomerDTO c2 = new CustomerDTO(2L, "Tungvall", "tungvall@gmail.com", "070123456789");
+//            CustomerDTO c3 = new CustomerDTO(3L, "Tim", "tim@gmail.com", "070123456789");
+//            CustomerDTO c1Response = customerService.registerCustomer(c1).getBody();
+//            CustomerDTO c2Response = customerService.registerCustomer(c2).getBody();
+//            CustomerDTO c3Response = customerService.registerCustomer(c3).getBody();
+//
+//            bookingRepo.save(new Booking(r1, c1Response.getId(), d1, d2));
+//            bookingRepo.save(new Booking(r4, c2Response.getId(), d3, d4));
+//            bookingRepo.save(new Booking(r8, c3Response.getId(), d5, d6));
+//            bookingRepo.save(new Booking(r2, c1Response.getId(), d1, d2));
+//            bookingRepo.save(new Booking(r3, c1Response.getId(), d1, d2));
+//            bookingRepo.save(new Booking(r4, c1Response.getId(), d1, d2));
+//
+//         };
+//
+//        //TODO: DTO-klasser (service lagret, från entity till DTO) ✅
+//        //TODO: ta bort kund (bara om bokningar ej finns) ✅
+//        //TODO: ett rum kan bokas av kund (+en eller fler nätter, datum) ✅
+//        //TODO: avboka ett rum och ändra bokning ✅
+//        //TODO: ett rum kan vara enkel- eller dubbelrum ✅
+//        //TODO: dubbelrum kan ha fler sängar (1-2) ✅
+//        //TODO: söka på datum/datumintervall och antal personer - få fram alla lediga rum ✅
+//        //TODO: använd validerings-annoteringar i modell-klasser ✅
+//        //TODO: låt controllers hantera thymeleaf-mallar ✅
+//        //TODO: Hantera fel för inga tillgängliga rum ✅
+//        //TODO: ha vettiga felmeddelanden ✅
+//        //TODO: enhetstester ✅
+//
+//
+//}
 
-            Room r1 = roomRepo.save(new Room("A1", true));
-            Room r2 = roomRepo.save(new Room("A2", true));
-            Room r3 = roomRepo.save(new Room("B3", true));
-            Room r4 = roomRepo.save(new Room("B4", true));
-            Room r5 = roomRepo.save(new Room("C5", true));
-            Room r6 = roomRepo.save(new Room("C6", false));
-            Room r7 = roomRepo.save(new Room("D7", false));
-            Room r8 = roomRepo.save(new Room("D8", false));
-            Room r9 = roomRepo.save(new Room("E9", false));
-            Room r10 = roomRepo.save(new Room("E10", false));
-
-            Customer c1 = customerRepo.save(new Customer("Melvin", "melvin@gmail.com", "070123456789"));
-            Customer c2 = customerRepo.save(new Customer("Tungvall", "tungvall@gmail.com", "070123456789"));
-            Customer c3 = customerRepo.save(new Customer("Tim", "tim@gmail.com", "070123456789"));
-
-            bookingRepo.save(new Booking(r1, c1.getId(), d1, d2));
-            bookingRepo.save(new Booking(r4, c2.getId(), d3, d4));
-            bookingRepo.save(new Booking(r8, c3.getId(), d5, d6));
-            bookingRepo.save(new Booking(r2, c1.getId(), d1, d2));
-            bookingRepo.save(new Booking(r3, c1.getId(), d1, d2));
-            bookingRepo.save(new Booking(r4, c1.getId(), d1, d2));
-
-        };
-
-        //TODO: DTO-klasser (service lagret, från entity till DTO) ✅
-        //TODO: ta bort kund (bara om bokningar ej finns) ✅
-        //TODO: ett rum kan bokas av kund (+en eller fler nätter, datum) ✅
-        //TODO: avboka ett rum och ändra bokning ✅
-        //TODO: ett rum kan vara enkel- eller dubbelrum ✅
-        //TODO: dubbelrum kan ha fler sängar (1-2) ✅
-        //TODO: söka på datum/datumintervall och antal personer - få fram alla lediga rum ✅
-        //TODO: använd validerings-annoteringar i modell-klasser ✅
-        //TODO: låt controllers hantera thymeleaf-mallar ✅
-        //TODO: Hantera fel för inga tillgängliga rum ✅
-        //TODO: ha vettiga felmeddelanden ✅
-        //TODO: enhetstester ✅
-
-
-    }
+//    }
 }
