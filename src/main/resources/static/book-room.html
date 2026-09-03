@@ -75,7 +75,9 @@
 
     async function loadCustomers() {
       try {
-        const customers = await Api.get("/api/customers");
+        const customers = await Api.get("/api/customers", {
+          500: "Kan inte nå kundmikrotjänsten just nu. Kontrollera att den körs.",
+        });
         customerSelect.innerHTML =
           `<option value="">Välj kund...</option>` +
           customers.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join("");
@@ -101,7 +103,8 @@
 
       try {
         const rooms = await Api.get(
-          `/api/bookings/available-rooms?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&doubleRoom=${isDoubleRoom}`
+          `/api/bookings/available-rooms?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&doubleRoom=${isDoubleRoom}`,
+          { 500: "Kunde inte söka lediga rum. Kontrollera datumen." }
         );
 
         if (!rooms.length) {
@@ -144,13 +147,17 @@
     async function bookSelectedRoom() {
       if (!lastSearch) return;
       try {
-        await Api.post("/api/bookings", {
-          startDate: lastSearch.startDate,
-          endDate: lastSearch.endDate,
-          isDoubleRoom: lastSearch.isDoubleRoom,
-          extraBeds: lastSearch.extraBeds,
-          customerId: lastSearch.customerId,
-        });
+        await Api.post(
+          "/api/bookings",
+          {
+            startDate: lastSearch.startDate,
+            endDate: lastSearch.endDate,
+            isDoubleRoom: lastSearch.isDoubleRoom,
+            extraBeds: lastSearch.extraBeds,
+            customerId: lastSearch.customerId,
+          },
+          { 500: "Kunde inte skapa bokningen. Rummet kan ha blivit bokat under tiden." }
+        );
         window.location.href = "/bookings.html";
       } catch (err) {
         showAlert(alertBox, err.message);

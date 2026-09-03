@@ -49,7 +49,9 @@
       e.preventDefault();
       const data = Object.fromEntries(new FormData(form).entries());
       try {
-        await Api.postJson("/api/customers/register", data);
+        await Api.postJson("/api/customers/register", data, {
+          400: "Kunde inte registrera kunden. Kontrollera att namn, e-post och telefonnummer är korrekt ifyllda.",
+        });
         window.location.href = "/customers.html";
       } catch (err) {
         showAlert(alertBox, err.message);

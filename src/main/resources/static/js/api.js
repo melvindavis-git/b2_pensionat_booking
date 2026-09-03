@@ -3,8 +3,8 @@
 // Spring Boot app that exposes /api/... (static/ folder on the same origin).
 
 // Turns raw backend/network error text into a readable Swedish message.
-// Returns null when the text doesn't match a known pattern, so the
-// original message can still be shown for things like validation errors.
+// Returns null when the text doesn't match a known pattern, so a real
+// backend message (e.g. "Inga rum tillgängliga.") can still be shown as-is.
 function friendlyErrorMessage(rawMessage) {
   const msg = (rawMessage || "").toLowerCase();
 
@@ -13,9 +13,10 @@ function friendlyErrorMessage(rawMessage) {
     msg.includes("i/o error") ||
     msg.includes("econnrefused") ||
     msg.includes("unknownhostexception") ||
-    msg.includes("connect timed out")
+    msg.includes("connect timed out") ||
+    msg.includes("resourceaccessexception")
   ) {
-    return "Kan inte nå databasen eller en av mikrotjänsterna just nu. Kontrollera att alla tjänster körs och försök igen.";
+    return "Kan inte nå kundmikrotjänsten just nu. Kontrollera att den körs och försök igen.";
   }
 
   if (msg.includes("failed to fetch") || msg.includes("networkerror") || msg.includes("load failed")) {
@@ -25,13 +26,56 @@ function friendlyErrorMessage(rawMessage) {
   return null;
 }
 
+// Pulls a human-readable message out of a JSON error body, trying the
+// shapes Spring commonly produces: {message}, {error}, or a Spring
+// validation body with an {errors:[{defaultMessage}]} array. Returns null
+// if nothing usable is found (many of this app's error responses carry no
+// message at all — an empty DTO or an empty body).
+function extractBackendMessage(body, isJson) {
+  if (isJson && body && typeof body === "object") {
+    if (typeof body.message === "string" && body.message.trim()) return body.message;
+    if (typeof body.error === "string" && body.error.trim()) return body.error;
+    if (Array.isArray(body.errors) && body.errors.length) {
+      const combined = body.errors
+        .map((e) => e.defaultMessage || e.message)
+        .filter(Boolean)
+        .join(" ");
+      if (combined.trim()) return combined;
+    }
+  }
+  if (!isJson && typeof body === "string" && body.trim()) {
+    return body;
+  }
+  return null;
+}
+
+function defaultStatusMessage(status) {
+  switch (status) {
+    case 400:
+      return "Ogiltig förfrågan. Kontrollera uppgifterna du skickade in.";
+    case 404:
+      return "Hittades inte.";
+    case 409:
+      return "Kunde inte genomföras eftersom det skulle skapa en konflikt.";
+    case 500:
+      return "Ett oväntat fel inträffade på servern.";
+    default:
+      return `Anropet misslyckades (status ${status}).`;
+  }
+}
+
 const Api = {
-  async request(url, options = {}) {
+  // statusMessages: optional { [httpStatus]: "text" } map so each call site
+  // can supply a context-specific fallback (used only when the backend
+  // itself didn't send a usable message).
+  async request(url, options = {}, statusMessages = {}) {
     let res;
     try {
       res = await fetch(url, options);
     } catch (networkErr) {
-      const err = new Error(friendlyErrorMessage(networkErr.message) || "Kan inte nå servern. Kontrollera att applikationen körs.");
+      const err = new Error(
+        friendlyErrorMessage(networkErr.message) || "Kan inte nå servern. Kontrollera att applikationen körs."
+      );
       err.status = 0;
       throw err;
     }
@@ -41,52 +85,62 @@ const Api = {
     const body = isJson ? await res.json().catch(() => null) : await res.text();
 
     if (!res.ok) {
-      const rawMessage =
-        (isJson && body && (body.message || body.error)) ||
-        (typeof body === "string" && body) ||
-        `Anropet misslyckades (status ${res.status}).`;
-      const err = new Error(friendlyErrorMessage(rawMessage) || rawMessage);
+      const backendMessage = extractBackendMessage(body, isJson);
+      const message =
+        friendlyErrorMessage(backendMessage) ||
+        backendMessage ||
+        statusMessages[res.status] ||
+        defaultStatusMessage(res.status);
+      const err = new Error(message);
       err.status = res.status;
-      err.rawMessage = rawMessage;
+      err.rawBody = body;
       throw err;
     }
     return body;
   },
 
-  get(url) {
-    return this.request(url);
+  get(url, statusMessages) {
+    return this.request(url, {}, statusMessages);
   },
 
-  postJson(url, data) {
-    return this.request(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+  postJson(url, data, statusMessages) {
+    return this.request(
+      url,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      },
+      statusMessages
+    );
   },
 
-  putJson(url, data) {
-    return this.request(url, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+  putJson(url, data, statusMessages) {
+    return this.request(
+      url,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      },
+      statusMessages
+    );
   },
 
   // For endpoints declared with @RequestParam (not @RequestBody),
   // the values must go in the query string, not a JSON body.
-  post(url, params) {
+  post(url, params, statusMessages) {
     const qs = new URLSearchParams(params).toString();
-    return this.request(`${url}?${qs}`, { method: "POST" });
+    return this.request(`${url}?${qs}`, { method: "POST" }, statusMessages);
   },
 
-  put(url, params) {
+  put(url, params, statusMessages) {
     const qs = new URLSearchParams(params).toString();
-    return this.request(`${url}?${qs}`, { method: "PUT" });
+    return this.request(`${url}?${qs}`, { method: "PUT" }, statusMessages);
   },
 
-  delete(url) {
-    return this.request(url, { method: "DELETE" });
+  delete(url, statusMessages) {
+    return this.request(url, { method: "DELETE" }, statusMessages);
   },
 };
 

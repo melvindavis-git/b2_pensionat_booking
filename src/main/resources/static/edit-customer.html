@@ -53,7 +53,10 @@
         return;
       }
       try {
-        const customer = await Api.get(`/api/customers/${id}`);
+        const customer = await Api.get(`/api/customers/${id}`, {
+          404: "Kunden hittades inte.",
+          400: "Ogiltigt kund-id.",
+        });
         form.id.value = customer.id;
         form.name.value = customer.name;
         form.email.value = customer.email;
@@ -68,7 +71,10 @@
       e.preventDefault();
       const data = Object.fromEntries(new FormData(form).entries());
       try {
-        await Api.putJson("/api/customers/edit", data);
+        await Api.putJson("/api/customers/edit", data, {
+          404: "Kunden hittades inte, det gick inte att spara.",
+          400: "Ogiltiga uppgifter, det gick inte att spara.",
+        });
         window.location.href = "/customers.html";
       } catch (err) {
         showAlert(alertBox, err.message);
