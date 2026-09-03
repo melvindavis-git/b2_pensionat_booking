@@ -2,6 +2,7 @@ package org.example.pensionat_booking.Service;
 
 import org.example.pensionat_booking.DTO.CustomerDTO;
 import org.example.pensionat_booking.Model.Booking;
+import org.example.pensionat_booking.Model.Customer;
 import org.example.pensionat_booking.Repository.BookingRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -36,6 +38,11 @@ public class CustomerService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
+
+    public CustomerDTO CustomerToCustomerDTO(Customer c) {
+        return CustomerDTO.builder().id(c.getId()).name(c.getName()).email(c.getEmail()).phone(c.getPhone()).build();
+    }
+
 
     public ResponseEntity<CustomerDTO> registerCustomer(CustomerDTO inputCustomer) {
 
