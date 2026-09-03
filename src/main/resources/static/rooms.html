@@ -29,7 +29,7 @@
 
     async function load() {
       try {
-        const rooms = await Api.get("/api/rooms");
+        const rooms = await Api.get("/api/rooms", { 500: "Kunde inte hämta rumslistan just nu." });
         if (!rooms.length) {
           tableWrap.innerHTML = `<div class="empty">Inga rum finns registrerade.</div>`;
           return;

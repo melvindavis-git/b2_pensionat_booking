@@ -37,8 +37,8 @@
     async function load() {
       try {
         const [bookings, customers] = await Promise.all([
-          Api.get("/api/bookings"),
-          Api.get("/api/customers"),
+          Api.get("/api/bookings", { 500: "Kunde inte hämta bokningar just nu." }),
+          Api.get("/api/customers", { 500: "Kan inte nå kundmikrotjänsten just nu. Kontrollera att den körs." }),
         ]);
         const customerById = Object.fromEntries(customers.map(c => [c.id, c.name]));
 
@@ -92,7 +92,7 @@
     async function deleteBooking(id) {
       if (!confirm("Ta bort denna bokning?")) return;
       try {
-        await Api.delete(`/api/bookings/${id}`);
+        await Api.delete(`/api/bookings/${id}`, { 500: "Bokningen kunde inte hittas eller tas bort." });
         showAlert(alertBox, "Bokningen togs bort.", "success");
         load();
       } catch (err) {

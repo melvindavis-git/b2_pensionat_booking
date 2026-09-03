@@ -36,7 +36,10 @@
 
     async function load() {
       try {
-        const customers = await Api.get("/api/customers");
+        const customers = await Api.get("/api/customers", {
+          400: "Kunde inte hämta kundlistan just nu.",
+          500: "Kan inte nå kundmikrotjänsten just nu. Kontrollera att den körs.",
+        });
         count.textContent = `${customers.length} kund${customers.length === 1 ? "" : "er"}`;
 
         if (!customers.length) {
@@ -83,19 +86,14 @@
     async function deleteCustomer(id) {
       if (!confirm("Ta bort denna kund?")) return;
       try {
-        const ok = await Api.delete(`/api/customers/delete/${id}`);
-        if (ok === false) {
-          showAlert(alertBox, "Kund har en bokning, kan ej tas bort.");
-        } else {
-          showAlert(alertBox, "Kunden togs bort.", "success");
-        }
+        await Api.delete(`/api/customers/delete/${id}`, {
+          409: "Kund har en bokning, kan ej tas bort.",
+          400: "Kunden kunde inte hittas eller är redan borttagen.",
+        });
+        showAlert(alertBox, "Kunden togs bort.", "success");
         load();
       } catch (err) {
-        // A connection problem (status 0) already has a friendly message.
-        // Any other failure while deleting is, in this app, caused by the
-        // customer having an existing booking.
-        const message = err.status === 0 ? err.message : "Kund har en bokning, kan ej tas bort.";
-        showAlert(alertBox, message);
+        showAlert(alertBox, err.message);
       }
     }
 
