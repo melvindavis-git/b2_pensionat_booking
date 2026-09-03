@@ -50,6 +50,4 @@ public class CustomerController {
     public ResponseEntity <CustomerDTO> editCustomer(@RequestBody CustomerDTO customerDTO) {
         return service.editById(customerDTO);
     }
-
-
 }

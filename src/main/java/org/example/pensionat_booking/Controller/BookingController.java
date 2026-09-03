@@ -5,6 +5,9 @@ import org.example.pensionat_booking.DTO.RoomDTO;
 import org.example.pensionat_booking.Service.BookingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +25,12 @@ public class BookingController {
     }
 
     @GetMapping()
-    public List<BookingDTO> getAllBookings() {
-        return bookingService.getAllBookings();
+    public ResponseEntity<List<BookingDTO>> getAllBookings() {
+        try {
+            return ResponseEntity.ok(bookingService.getAllBookings());
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/available-rooms")

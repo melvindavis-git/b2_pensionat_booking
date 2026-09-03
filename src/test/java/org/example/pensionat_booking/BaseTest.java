@@ -1,10 +1,8 @@
 package org.example.pensionat_booking;
 
 import org.example.pensionat_booking.Model.Booking;
-import org.example.pensionat_booking.Model.Customer;
 import org.example.pensionat_booking.Model.Room;
 import org.example.pensionat_booking.Repository.BookingRepository;
-import org.example.pensionat_booking.Repository.CustomerRepository;
 import org.example.pensionat_booking.Repository.RoomRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
@@ -19,9 +17,6 @@ import java.time.LocalDate;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureRestTestClient
 public abstract class BaseTest {
-
-    @Autowired
-    protected CustomerRepository customerRepository;
     @Autowired
     protected RoomRepository roomRepository;
     @Autowired
@@ -33,17 +28,6 @@ public abstract class BaseTest {
     void setUp() {
         bookingRepository.deleteAll();
         roomRepository.deleteAll();
-        customerRepository.deleteAll();
-
-        Customer customer1 = new Customer("Mikael", "mikael@mail.com", "070311223344");
-        Customer customer2 = new Customer("Tim", "tim@mail.com", "070311223344");
-        Customer customer3 = new Customer("Melvin", "melvin@mail.com", "070311223344");
-        Customer customer4 = new Customer("Rolf", "rolfh@mail.com", "070311223344");
-
-        customerRepository.save(customer1);
-        customerRepository.save(customer2);
-        customerRepository.save(customer3);
-        customerRepository.save(customer4);
 
         Room room1 = new Room("A1", false);
         Room room2 = new Room("A2", false);
