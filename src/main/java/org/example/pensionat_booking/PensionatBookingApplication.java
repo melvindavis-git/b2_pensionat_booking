@@ -1,7 +1,6 @@
 package org.example.pensionat_booking;
 
 import org.example.pensionat_booking.Model.Booking;
-import org.example.pensionat_booking.Model.Customer;
 import org.example.pensionat_booking.Model.Room;
 import org.example.pensionat_booking.Repository.BookingRepository;
 import org.example.pensionat_booking.Repository.RoomRepository;

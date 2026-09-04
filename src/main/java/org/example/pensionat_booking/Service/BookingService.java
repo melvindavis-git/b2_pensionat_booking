@@ -7,11 +7,15 @@ import org.example.pensionat_booking.Model.Booking;
 import org.example.pensionat_booking.Model.Room;
 import org.example.pensionat_booking.Repository.BookingRepository;
 import org.example.pensionat_booking.Repository.RoomRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,8 +25,6 @@ public class BookingService {
     private final BookingRepository bookingRepo;
     private final RoomRepository roomRepo;
     RestTemplate restTemplate = new RestTemplate();
-
-
 
 
     public BookingService(BookingRepository bookingRepo, RoomRepository roomRepo) {
@@ -36,45 +38,38 @@ public class BookingService {
     }
 
     public BookingDTO BookingToBookingDTO(Booking b) {
-        return BookingDTO.builder()
-                .id(b.getId())
-                .room(new Room(
-                        b.getRoom().getId(),
-                        b.getRoom().getNr(),
-                        b.getRoom().isDoubleRoom()
-                ))
-                .customerId(b.getCustomerId())
-                .startDate(b.getStartDate().toString())
-                .endDate(b.getEndDate().toString())
-                .extraBeds(b.getExtraBeds())
-                .build();
+        return BookingDTO.builder().id(b.getId()).room(new Room(b.getRoom().getId(), b.getRoom().getNr(), b.getRoom().isDoubleRoom())).customerId(b.getCustomerId()).startDate(b.getStartDate().toString()).endDate(b.getEndDate().toString()).extraBeds(b.getExtraBeds()).build();
     }
 
     public List<RoomDTO> canBook(String startDate, String endDate, boolean doubleRoom) {
 
+
+        List<String> invalidInputs = new ArrayList<>();
+
         if (!canParseDate(startDate)) {
-            throw new RuntimeException(
-                    "Måste ange startdatum.");
+            invalidInputs.add("Inget angivet startdatum.");
         }
 
         if (!canParseDate(endDate)) {
-            throw new RuntimeException(
-                    "Måste ange slutdatum.");
+            invalidInputs.add("Inget angivet slutdtdatum.");
         }
 
         LocalDate requestedStartDate = LocalDate.parse(startDate);
         LocalDate requestedEndDate = LocalDate.parse(endDate);
 
         if (requestedEndDate.isBefore(requestedStartDate)) {
-            throw new RuntimeException("Slutdatum kan inte vara innan startdatum.");
+            invalidInputs.add("Slutdatum kan inte vara innan startdatum.");
+        }
+
+        if (!invalidInputs.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, invalidInputs.toString());
         }
 
         List<Booking> bookings = bookingRepo.findAll();
         List<Room> validRooms = roomRepo.findAll();
 
         for (Booking booking : bookings) {
-            boolean noConflict = booking.getEndDate().isBefore(requestedStartDate)
-                    || booking.getStartDate().isAfter(requestedEndDate);
+            boolean noConflict = booking.getEndDate().isBefore(requestedStartDate) || booking.getStartDate().isAfter(requestedEndDate);
 
             if (noConflict) {
 
@@ -85,39 +80,29 @@ public class BookingService {
 
         validRooms.removeIf(room -> room.isDoubleRoom() != doubleRoom);
 
-        return validRooms.stream()
-                .map(room -> RoomDTO.builder()
-                        .id(room.getId())
-                        .nr(room.getNr())
-                        .isDoubleRoom(room.isDoubleRoom())
-                        .build())
-                .toList();
+        return validRooms.stream().map(room -> RoomDTO.builder().id(room.getId()).nr(room.getNr()).isDoubleRoom(room.isDoubleRoom()).build()).toList();
     }
 
     public BookingDTO createBooking(String startDate, String endDate, boolean isDoubleRoom, Long customerId, int extraBeds) {
 
         if (!canParseDate(startDate) && !canParseDate(endDate)) {
-            throw new RuntimeException("Måste ange både slut och startdatum.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Måste ange både slut och startdatum.");
         }
-
 
         List<RoomDTO> availableRooms = canBook(startDate, endDate, isDoubleRoom);
         LocalDate requestedStartDate = LocalDate.parse(startDate);
         LocalDate requestedEndDate = LocalDate.parse(endDate);
 
-
         if (availableRooms == null) {
-            throw new RuntimeException("Felaktig datum input.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Felaktig datum input.");
         }
 
         if (availableRooms.isEmpty()) {
-            throw new RuntimeException("Inga rum tillgängliga.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Inga rum tillgängliga.");
         }
-
 
         Room room = roomRepo.findById(availableRooms.getFirst().getId()).orElse(null);
         CustomerDTO currentCustomer = restTemplate.getForObject("http://localhost:8080/api/customers/{id}", CustomerDTO.class, customerId);
-
 
         Booking currentBooking = new Booking(room, currentCustomer.getId(), requestedStartDate, requestedEndDate);
         currentBooking.setExtraBeds(extraBeds);
@@ -128,14 +113,14 @@ public class BookingService {
     public BookingDTO editBooking(Long bookingID, String startDate, String endDate) {
 
         if (!canParseDate(startDate) && !canParseDate(endDate)) {
-            throw new RuntimeException("Felaktig datum syntax.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Felaktig datum syntax.");
         }
 
         LocalDate requestedStartDate = LocalDate.parse(startDate);
         LocalDate requestedEndDate = LocalDate.parse(endDate);
 
         if (requestedEndDate.isBefore(requestedStartDate)) {
-            throw new RuntimeException("Slutdatum kan inte vara innan startdatum.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Slutdatum kan inte vara innan startdatum.");
         }
 
         boolean available = true;
@@ -147,8 +132,7 @@ public class BookingService {
         bookings.remove(currentBooking);
 
         for (Booking booking : bookings) {
-            boolean noConflict = booking.getEndDate().isBefore(requestedStartDate)
-                    || booking.getStartDate().isAfter(requestedEndDate);
+            boolean noConflict = booking.getEndDate().isBefore(requestedStartDate) || booking.getStartDate().isAfter(requestedEndDate);
 
             if (noConflict) {
 
@@ -168,12 +152,11 @@ public class BookingService {
     }
 
 
-    public BookingDTO removeBooking(Long bookingID) {
-        Booking deletedBooking = bookingRepo.findById(bookingID).orElseThrow(() ->
-                new RuntimeException("Bokningen hittades ej."));
-        BookingDTO deletedBookingDTO = BookingToBookingDTO(deletedBooking);
+    public void removeBooking(Long bookingID) {
+        if (!bookingRepo.existsById(bookingID)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Bokningen hittades ej.");
+        }
         bookingRepo.deleteById(bookingID);
-        return deletedBookingDTO;
     }
 
     public boolean canParseDate(String date) {

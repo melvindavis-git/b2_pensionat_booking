@@ -1,63 +1,63 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pensionat - Ny bokning</title>
-  <link rel="stylesheet" href="/css/style.css" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Pensionat - Ny bokning</title>
+    <link rel="stylesheet" href="/css/style.css"/>
 </head>
 <body>
-  <header>
+<header>
     <nav>
-      <span class="brand">Pensionat</span>
-      <a href="/index.html" data-nav>Start</a>
-      <a href="/customers.html" data-nav>Kunder</a>
-      <a href="/rooms.html" data-nav>Rum</a>
-      <a href="/bookings.html" data-nav>Bokningar</a>
+        <span class="brand">Pensionat</span>
+        <a href="/index.html" data-nav>Start</a>
+        <a href="/customers.html" data-nav>Kunder</a>
+        <a href="/rooms.html" data-nav>Rum</a>
+        <a href="/bookings.html" data-nav>Bokningar</a>
     </nav>
-  </header>
-  <main>
+</header>
+<main>
     <h1>Ny bokning</h1>
     <div id="alert"></div>
 
     <form id="searchForm" class="card">
-      <div class="form-row">
-        <label>
-          Incheckning
-          <input type="date" name="startDate" required />
+        <div class="form-row">
+            <label>
+                Incheckning
+                <input type="date" name="startDate" required/>
+            </label>
+            <label>
+                Utcheckning
+                <input type="date" name="endDate" required/>
+            </label>
+        </div>
+        <label class="inline">
+            <input type="checkbox" name="isDoubleRoom" id="doubleRoomCheckbox"/>
+            Dubbelrum
+        </label>
+        <label id="extraBedsLabel" hidden>
+            Extrasängar
+            <input type="number" name="extraBeds" id="extraBeds" min="0" max="2" value="0"/>
         </label>
         <label>
-          Utcheckning
-          <input type="date" name="endDate" required />
+            Kund
+            <select name="customerId" required>
+                <option value="">Välj kund...</option>
+            </select>
         </label>
-      </div>
-      <label class="inline">
-        <input type="checkbox" name="isDoubleRoom" id="doubleRoomCheckbox" />
-        Dubbelrum
-      </label>
-      <label id="extraBedsLabel" hidden>
-        Extrasängar
-        <input type="number" name="extraBeds" id="extraBeds" min="0" max="2" value="0" />
-      </label>
-      <label>
-        Kund
-        <select name="customerId" required>
-          <option value="">Välj kund...</option>
-        </select>
-      </label>
-      <div class="actions">
-        <button type="submit">Sök lediga rum</button>
-      </div>
+        <div class="actions">
+            <button type="submit">Sök lediga rum</button>
+        </div>
     </form>
 
     <h2>Lediga rum</h2>
     <div id="resultsWrap">
-      <p class="muted">Sök ovan för att se lediga rum.</p>
+        <p class="muted">Sök ovan för att se lediga rum.</p>
     </div>
-  </main>
+</main>
 
-  <script src="/js/api.js"></script>
-  <script>
+<script src="/js/api.js"></script>
+<script>
     const alertBox = document.getElementById("alert");
     const searchForm = document.getElementById("searchForm");
     const resultsWrap = document.getElementById("resultsWrap");
@@ -67,52 +67,55 @@
     const extraBedsInput = document.getElementById("extraBeds");
 
     doubleRoomCheckbox.addEventListener("change", () => {
-      extraBedsLabel.hidden = !doubleRoomCheckbox.checked;
-      if (!doubleRoomCheckbox.checked) extraBedsInput.value = 0;
+        extraBedsLabel.hidden = !doubleRoomCheckbox.checked;
+        if (!doubleRoomCheckbox.checked) extraBedsInput.value = 0;
     });
 
     let lastSearch = null;
 
     async function loadCustomers() {
-      try {
-        const customers = await Api.get("/api/customers", {
-          500: "Kan inte nå kundmikrotjänsten just nu. Kontrollera att den körs.",
-        });
-        customerSelect.innerHTML =
-          `<option value="">Välj kund...</option>` +
-          customers.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join("");
-      } catch (err) {
-        showAlert(alertBox, err.message);
-      }
+        try {
+            const customers = await Api.get("/api/customers", {
+                500: "Kan inte nå kundmikrotjänsten just nu. Kontrollera att den körs.",
+            });
+            customerSelect.innerHTML =
+                `<option value="">Välj kund...</option>` +
+                customers.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join("");
+        } catch (err) {
+            showAlert(alertBox, err.message);
+        }
     }
 
     searchForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const startDate = searchForm.startDate.value;
-      const endDate = searchForm.endDate.value;
-      const isDoubleRoom = searchForm.isDoubleRoom.checked;
-      const extraBeds = isDoubleRoom ? Number(extraBedsInput.value || 0) : 0;
-      const customerId = customerSelect.value;
+        e.preventDefault();
+        const startDate = searchForm.startDate.value;
+        const endDate = searchForm.endDate.value;
+        const isDoubleRoom = searchForm.isDoubleRoom.checked;
+        const extraBeds = isDoubleRoom ? Number(extraBedsInput.value || 0) : 0;
+        const customerId = customerSelect.value;
 
-      if (!customerId) {
-        showAlert(alertBox, "Välj en kund innan du söker.");
-        return;
-      }
-
-      lastSearch = { startDate, endDate, isDoubleRoom, extraBeds, customerId };
-
-      try {
-        const rooms = await Api.get(
-          `/api/bookings/available-rooms?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&doubleRoom=${isDoubleRoom}`,
-          { 500: "Kunde inte söka lediga rum. Kontrollera datumen." }
-        );
-
-        if (!rooms.length) {
-          resultsWrap.innerHTML = `<div class="empty">Inga lediga rum för valt datumintervall.</div>`;
-          return;
+        if (!customerId) {
+            showAlert(alertBox, "Välj en kund innan du söker.");
+            return;
         }
 
-        resultsWrap.innerHTML = `
+        lastSearch = {startDate, endDate, isDoubleRoom, extraBeds, customerId};
+
+        try {
+            const rooms = await Api.get(
+                `/api/bookings/available-rooms?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&doubleRoom=${isDoubleRoom}`,
+                {
+                    400: "Ogiltiga datum. Kontrollera att startdatum är före slutdatum.",
+                    500: "Kunde inte söka lediga rum. Kontrollera datumen."
+                }
+            );
+
+            if (!rooms.length) {
+                resultsWrap.innerHTML = `<div class="empty">Inga lediga rum för valt datumintervall.</div>`;
+                return;
+            }
+
+            resultsWrap.innerHTML = `
           <table>
             <thead>
               <tr>
@@ -133,38 +136,38 @@
           </table>
         `;
 
-        resultsWrap.querySelectorAll("[data-book]").forEach(btn => {
-          btn.addEventListener("click", bookSelectedRoom);
-        });
-      } catch (err) {
-        showAlert(alertBox, err.message);
-      }
+            resultsWrap.querySelectorAll("[data-book]").forEach(btn => {
+                btn.addEventListener("click", bookSelectedRoom);
+            });
+        } catch (err) {
+            showAlert(alertBox, err.message);
+        }
     });
 
     // The booking endpoint (POST /api/bookings) doesn't take a specific
     // room id — it books based on date range, room type and customer —
     // so any "Boka" button in the results uses the same search criteria.
     async function bookSelectedRoom() {
-      if (!lastSearch) return;
-      try {
-        await Api.post(
-          "/api/bookings",
-          {
-            startDate: lastSearch.startDate,
-            endDate: lastSearch.endDate,
-            isDoubleRoom: lastSearch.isDoubleRoom,
-            extraBeds: lastSearch.extraBeds,
-            customerId: lastSearch.customerId,
-          },
-          { 500: "Kunde inte skapa bokningen. Rummet kan ha blivit bokat under tiden." }
-        );
-        window.location.href = "/bookings.html";
-      } catch (err) {
-        showAlert(alertBox, err.message);
-      }
+        if (!lastSearch) return;
+        try {
+            await Api.post(
+                "/api/bookings",
+                {
+                    startDate: lastSearch.startDate,
+                    endDate: lastSearch.endDate,
+                    isDoubleRoom: lastSearch.isDoubleRoom,
+                    extraBeds: lastSearch.extraBeds,
+                    customerId: lastSearch.customerId,
+                },
+                {500: "Kunde inte skapa bokningen. Rummet kan ha blivit bokat under tiden."}
+            );
+            window.location.href = "/bookings.html";
+        } catch (err) {
+            showAlert(alertBox, err.message);
+        }
     }
 
     loadCustomers();
-  </script>
+</script>
 </body>
 </html>
